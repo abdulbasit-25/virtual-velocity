@@ -44,12 +44,21 @@ export const GSAPHeroTimeline = () => {
   const [slideCount, setSlideCount] = useState(0);
 
   useEffect(() => {
-    SLIDER_IMAGES.forEach((img) => {
-      if (typeof window !== "undefined") {
+    const prefetchImages = () => {
+      if (typeof window === "undefined") return;
+
+      SLIDER_IMAGES.forEach((img) => {
         const i = new window.Image();
+        i.decoding = "async";
         i.src = img.src;
-      }
-    });
+      });
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      window.requestIdleCallback(prefetchImages, { timeout: 1200 });
+    } else {
+      globalThis.setTimeout(prefetchImages, 250);
+    }
   }, []);
 
   useEffect(() => {
@@ -70,6 +79,10 @@ export const GSAPHeroTimeline = () => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          if (!video.dataset.loaded) {
+            video.load();
+            video.dataset.loaded = "true";
+          }
           video.play().catch(() => {});
         } else {
           video.pause();
@@ -228,6 +241,7 @@ export const GSAPHeroTimeline = () => {
           <video
             ref={videoRef}
             src="/vv-website-video.mp4"
+            poster="/banner-2.webp"
             autoPlay
             loop
             muted
