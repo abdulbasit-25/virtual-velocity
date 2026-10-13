@@ -5,8 +5,10 @@ const nextConfig: NextConfig = {
   compress: true,
   productionBrowserSourceMaps: false,
   experimental: {
-    // framer-motion is a huge barrel — only bundle the primitives actually imported.
-    optimizePackageImports: ["framer-motion"],
+    // Keep the motion stack lean without changing the experience: only import the
+    // parts actually used by the interactive sections and allow Next.js to tree-shake
+    // the heavy animation packages more aggressively.
+    optimizePackageImports: ["framer-motion", "gsap", "@gsap/react", "lucide-react", "lenis"],
   },
   images: {
     formats: ["image/avif", "image/webp"],
