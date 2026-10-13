@@ -59,15 +59,18 @@ export const EditorialTestimonials = () => {
   }, []);
 
   useEffect(() => {
-    loadReviewsFromDb();
+    const frameId = window.requestAnimationFrame(() => {
+      void loadReviewsFromDb();
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
   }, [loadReviewsFromDb]);
 
-  // Ensure activeIdx stays within bounds
-  useEffect(() => {
-    if (activeIdx >= reviewsList.length && reviewsList.length > 0) {
-      setActiveIdx(0);
-    }
-  }, [reviewsList.length, activeIdx]);
+  const normalizedActiveIdx = reviewsList.length === 0
+    ? 0
+    : ((activeIdx % reviewsList.length) + reviewsList.length) % reviewsList.length;
 
   const handleNext = useCallback(() => {
     if (reviewsList.length === 0) return;
@@ -153,7 +156,7 @@ export const EditorialTestimonials = () => {
     }
   };
 
-  const current = reviewsList[activeIdx];
+  const current = reviewsList[normalizedActiveIdx];
 
   return (
     <section
@@ -276,7 +279,7 @@ export const EditorialTestimonials = () => {
                       key={idx}
                       onClick={() => setActiveIdx(idx)}
                       className={`h-2 rounded-full transition-all duration-300 ${
-                        idx === activeIdx ? "w-8 bg-emerald-600" : "w-2 bg-zinc-300 hover:bg-zinc-500"
+                        idx === normalizedActiveIdx ? "w-8 bg-emerald-600" : "w-2 bg-zinc-300 hover:bg-zinc-500"
                       }`}
                       aria-label={`Go to review ${idx + 1}`}
                     />
