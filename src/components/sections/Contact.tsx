@@ -3,7 +3,6 @@
 import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle2, Clock, ShieldCheck, ChevronDown, Globe, ArrowLeft, ArrowRight } from "lucide-react";
-import { CreativeCTA } from "@/components/ui/CreativeCTA";
 import { loadGsap } from "@/lib/gsapClient";
 
 const SERVICE_OPTIONS = [
@@ -97,7 +96,10 @@ export const Contact = () => {
   });
 
   useEffect(() => {
-    setMounted(true);
+    const frameId = window.requestAnimationFrame(() => {
+      setMounted(true);
+    });
+
     const updateClocks = () => {
       const updated: Record<string, string> = {};
       REGIONAL_HUBS.forEach((hub) => {
@@ -110,7 +112,10 @@ export const Contact = () => {
 
     updateClocks();
     const interval = setInterval(updateClocks, 1000);
-    return () => clearInterval(interval);
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {
