@@ -244,6 +244,9 @@ function ColumnHeading({ children }: { children: ReactNode }) {
   );
 }
 
+const underline =
+  "relative after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-full after:origin-right after:scale-x-0 after:rounded-full after:bg-white after:transition-transform after:duration-300 after:ease-out group-hover:after:origin-left group-hover:after:scale-x-100 group-focus-visible:after:origin-left group-focus-visible:after:scale-x-100";
+
 function FooterLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
@@ -254,7 +257,9 @@ function FooterLink({ href, children }: { href: string; children: ReactNode }) {
         aria-hidden="true"
         className="h-0.5 w-0 rounded-full bg-white transition-all duration-300 ease-out group-hover:mr-2.5 group-hover:w-3 group-focus-visible:mr-2.5 group-focus-visible:w-3"
       />
-      <span className="transition-transform duration-300 group-hover:translate-x-0.5">
+      <span
+        className={`transition-transform duration-300 group-hover:translate-x-0.5 ${underline}`}
+      >
         {children}
       </span>
     </Link>
@@ -542,9 +547,9 @@ export const Footer = () => {
             <li>
               <Link
                 href="/privacy-policy"
-                className={`rounded px-2 py-2 transition-colors hover:text-white hover:underline hover:underline-offset-4 ${ring}`}
+                className={`group rounded px-2 py-2 transition-colors hover:text-white ${ring}`}
               >
-                Privacy Policy
+                <span className={underline}>Privacy Policy</span>
               </Link>
             </li>
             <li aria-hidden="true" className="text-white/40">
@@ -553,9 +558,9 @@ export const Footer = () => {
             <li>
               <Link
                 href="/terms-of-use"
-                className={`rounded px-2 py-2 transition-colors hover:text-white hover:underline hover:underline-offset-4 ${ring}`}
+                className={`group rounded px-2 py-2 transition-colors hover:text-white ${ring}`}
               >
-                Terms of Use
+                <span className={underline}>Terms of Use</span>
               </Link>
             </li>
           </ul>
