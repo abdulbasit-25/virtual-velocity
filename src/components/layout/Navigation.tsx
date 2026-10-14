@@ -1,8 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
-import { Menu, X, ArrowUpRight, Compass } from "lucide-react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useSpring,
+  useMotionValueEvent,
+  type Variants,
+} from "framer-motion";
+import { Menu, X, ArrowUpRight, Mail } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -17,194 +24,314 @@ const NAV_LINKS = [
   { label: "CONTACT", href: "/contact" },
 ];
 
+/* ------------------------------------------------------------------ */
+/* Theme tokens: one place for light / dark (Salt Line) styling        */
+/* ------------------------------------------------------------------ */
+const THEMES = {
+  light: {
+    barTop: "bg-white/60 backdrop-blur-md border-zinc-200/60",
+    barScrolled:
+      "bg-white/85 backdrop-blur-xl border-zinc-200/90 shadow-lg shadow-zinc-950/5",
+    logoText: "text-zinc-950 group-hover:text-emerald-600",
+    logoImg: "mix-blend-multiply",
+    link: "text-zinc-600 hover:text-zinc-950",
+    linkActive: "text-zinc-950",
+    pill: "bg-zinc-100",
+    cta: "bg-emerald-500/[0.08] hover:bg-emerald-500/[0.14] text-zinc-950 group-hover:text-emerald-700 border-emerald-500/25",
+    ctaIcon:
+      "bg-emerald-500/15 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white",
+    toggle: "bg-zinc-100/80 border-zinc-200 text-zinc-900",
+    drawer: "bg-white text-zinc-950",
+    drawerBorder: "border-zinc-200",
+    drawerMuted: "text-zinc-500",
+    drawerLink: "text-zinc-900 hover:text-emerald-600",
+    drawerLinkActive: "text-emerald-600",
+    closeBtn: "bg-zinc-100 hover:bg-emerald-50 text-zinc-900 border-zinc-200",
+  },
+  dark: {
+    barTop: "bg-black/40 backdrop-blur-md border-white/10",
+    barScrolled:
+      "bg-zinc-950/85 backdrop-blur-xl border-zinc-800/80 shadow-lg shadow-black/40",
+    logoText: "text-white group-hover:text-emerald-400",
+    logoImg: "brightness-0 invert",
+    link: "text-zinc-400 hover:text-white",
+    linkActive: "text-white",
+    pill: "bg-white/10",
+    cta: "bg-white/10 hover:bg-white/20 text-white group-hover:text-emerald-300 border-white/20",
+    ctaIcon:
+      "bg-white/10 text-emerald-400 group-hover:bg-emerald-400 group-hover:text-zinc-950",
+    toggle: "bg-zinc-800/80 border-zinc-700 text-white",
+    drawer: "bg-zinc-950 text-white",
+    drawerBorder: "border-zinc-800",
+    drawerMuted: "text-zinc-400",
+    drawerLink: "text-zinc-100 hover:text-emerald-400",
+    drawerLinkActive: "text-emerald-400",
+    closeBtn: "bg-zinc-900 hover:bg-zinc-800 text-white border-zinc-700",
+  },
+} as const;
+
+/* ------------------------------------------------------------------ */
+/* Motion variants                                                     */
+/* ------------------------------------------------------------------ */
+const drawerVariants: Variants = {
+  hidden: { opacity: 0, clipPath: "inset(0 0 100% 0)" },
+  visible: {
+    opacity: 1,
+    clipPath: "inset(0 0 0% 0)",
+    transition: {
+      duration: 0.45,
+      ease: [0.76, 0, 0.24, 1],
+      when: "beforeChildren",
+      staggerChildren: 0.06,
+    },
+  },
+  exit: {
+    opacity: 0,
+    clipPath: "inset(0 0 100% 0)",
+    transition: { duration: 0.35, ease: [0.76, 0, 0.24, 1] },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" },
+  },
+};
+
 export const Navigation = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredHref, setHoveredHref] = useState<string | null>(null);
   const pathname = usePathname();
 
-  const { scrollY } = useScroll();
+  const isSaltLine = pathname === "/the-salt-line";
+  const t = isSaltLine ? THEMES.dark : THEMES.light;
+
+  /* Scroll state: compact bar + hide on scroll down / show on scroll up */
+  const { scrollY, scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 140,
+    damping: 28,
+    restDelta: 0.001,
+  });
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 20);
   });
 
-  // Lock body scroll when mobile drawer is active
+  /* Close drawer on route change */
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    setMobileOpen(false);
+  }, [pathname]);
+
+  /* Lock body scroll + Escape to close while drawer is open */
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
     };
   }, [mobileOpen]);
 
-  const isSaltLine = pathname === "/the-salt-line";
-
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 pt-2.5 sm:pt-3 px-3 sm:px-6 lg:px-8 pointer-events-none">
+      <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6 lg:px-8 pointer-events-none">
         <div
-          className={`max-w-[1700px] mx-auto pointer-events-auto h-14 sm:h-16 px-4 sm:px-6 lg:px-8 rounded-2xl flex items-center justify-between transition-all duration-300 transform ${
-            scrolled
-              ? isSaltLine
-                ? "translate-y-2 sm:translate-y-2.5 bg-zinc-950/85 backdrop-blur-md border border-zinc-800/80 shadow-lg shadow-black/40"
-                : "translate-y-2 sm:translate-y-2.5 bg-white/85 backdrop-blur-md border border-zinc-200/90 shadow-md shadow-zinc-950/5"
-              : isSaltLine
-              ? "translate-y-0 bg-black/40 backdrop-blur-xs border border-white/10"
-              : "translate-y-0 bg-white/50 backdrop-blur-xs border border-zinc-200/50 shadow-xs"
+          className={`pointer-events-auto relative mx-auto flex max-w-[1700px] items-center justify-between overflow-hidden rounded-2xl border px-4 transition-all duration-300 sm:px-6 lg:px-8 ${
+            scrolled ? `h-14 ${t.barScrolled}` : `h-14 sm:h-16 ${t.barTop}`
           }`}
         >
           {/* Logo */}
           <Magnetic strength={0.15}>
             <Link
               href="/"
-              className={`group relative flex items-center h-full font-outfit font-extrabold text-base sm:text-lg lg:text-xl tracking-tighter uppercase ${
-                isSaltLine ? "text-white" : "text-zinc-950"
-              }`}
+              aria-label="Virtual Velocity home"
+              className="group relative flex h-full items-center gap-2.5 font-outfit uppercase tracking-tighter"
             >
               <span
                 aria-hidden="true"
-                className="absolute -inset-3 -z-10 rounded-2xl bg-emerald-400/30 blur-xl opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 pointer-events-none"
+                className="pointer-events-none absolute -inset-3 -z-10 scale-75 rounded-2xl bg-emerald-400/30 opacity-0 blur-xl transition-all duration-300 group-hover:scale-100 group-hover:opacity-100"
               />
-              <span className="flex items-center gap-2 sm:gap-2.5 origin-left">
-                <Image
-                  src="/VV png.png"
-                  alt="Virtual Velocity Logo"
-                  width={40}
-                  height={40}
-                  style={{ width: "auto", height: "auto" }}
-                  className={`h-7 sm:h-8 w-auto object-contain drop-shadow-xs transition-transform duration-300 group-hover:scale-105 ${
-                    isSaltLine ? "brightness-0 invert" : "mix-blend-multiply"
-                  }`}
-                  priority
-                />
-                <span className={`transition-colors duration-300 font-black text-sm sm:text-base lg:text-lg ${
-                  isSaltLine ? "text-white group-hover:text-emerald-400" : "text-zinc-950 group-hover:text-emerald-600"
-                }`}>
-                  VIRTUAL{" "}
-                  <span className="text-emerald-500 font-black inline-block transition-transform duration-500 group-hover:rotate-180">
-                    •
-                  </span>{" "}
-                  VELOCITY
-                </span>
+              <Image
+                src="/VV png.png"
+                alt=""
+                width={40}
+                height={40}
+                style={{ width: "auto", height: "auto" }}
+                className={`h-7 w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8 ${t.logoImg}`}
+                priority
+              />
+              <span
+                className={`text-sm font-black transition-colors duration-300 sm:text-base lg:text-lg ${t.logoText}`}
+              >
+                VIRTUAL{" "}
+                <span className="inline-block text-emerald-500 transition-transform duration-500 group-hover:rotate-180">
+                  •
+                </span>{" "}
+                VELOCITY
               </span>
             </Link>
           </Magnetic>
 
-          {/* Desktop Nav Items */}
-          <nav className="hidden lg:flex items-center gap-1 h-full">
+          {/* Desktop nav: shared-layout pill follows hover / active */}
+          <nav
+            aria-label="Primary"
+            onMouseLeave={() => setHoveredHref(null)}
+            className="hidden h-full items-center gap-0.5 lg:flex"
+          >
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
-              const isHovered = hoveredHref === link.href;
+              const showPill = hoveredHref ? hoveredHref === link.href : false;
               return (
-                <Magnetic key={link.label} strength={0.1}>
-                  <Link
-                    href={link.href}
-                    onMouseEnter={() => setHoveredHref(link.href)}
-                    onMouseLeave={() => setHoveredHref(null)}
-                    className={`relative px-3.5 py-2 rounded-lg text-[11px] font-bold tracking-[0.2em] uppercase transition-colors duration-150 flex items-center justify-center shrink-0 ${
-                      isActive
-                        ? isSaltLine
-                          ? "text-emerald-400 font-extrabold"
-                          : "text-emerald-600 font-extrabold"
-                        : isSaltLine
-                        ? "text-zinc-300 hover:text-white"
-                        : "text-zinc-800 hover:text-zinc-950 font-bold"
-                    }`}
-                  >
-                    {/* Hover Background Pill */}
-                    {isHovered && (
-                      <span
-                        className={`absolute inset-0 rounded-lg transition-opacity duration-150 ${
-                          isSaltLine ? "bg-white/10" : "bg-zinc-100"
-                        }`}
-                      />
-                    )}
-
-                    <span className="relative z-10">{link.label}</span>
-
-                    {/* Active Route indicator dot */}
-                    {isActive && (
-                      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-xs pointer-events-none" />
-                    )}
-                  </Link>
-                </Magnetic>
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  onMouseEnter={() => setHoveredHref(link.href)}
+                  onFocus={() => setHoveredHref(link.href)}
+                  onBlur={() => setHoveredHref(null)}
+                  className={`relative flex shrink-0 items-center justify-center rounded-lg px-3.5 py-2 text-[11px] font-bold uppercase tracking-[0.2em] transition-colors duration-150 ${
+                    isActive ? t.linkActive : t.link
+                  }`}
+                >
+                  {showPill && (
+                    <motion.span
+                      layoutId="nav-hover-pill"
+                      className={`absolute inset-0 rounded-lg ${t.pill}`}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 36,
+                      }}
+                    />
+                  )}
+                  <span className="relative z-10">{link.label}</span>
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active-dot"
+                      className="pointer-events-none absolute bottom-0.5 left-1/2 h-1 w-4 -translate-x-1/2 rounded-full bg-emerald-500"
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </Link>
               );
             })}
           </nav>
 
-          {/* Right Action CTA Button */}
-          <div className="hidden lg:flex items-center gap-4 h-full">
+          {/* Desktop CTA */}
+          <div className="hidden h-full items-center lg:flex">
             <Magnetic strength={0.1}>
               <Link
                 href="/contact"
-                className="group relative inline-flex items-center justify-center rounded-xl overflow-hidden active:scale-[0.98] transition-transform duration-200 shadow-xs"
+                className="group relative inline-flex items-center justify-center rounded-xl active:scale-[0.97] transition-transform duration-200"
               >
-                {/* Revolving boundary animation */}
+                {/* Glow that blooms on hover */}
                 <span
                   aria-hidden="true"
-                  className="absolute inset-0 rounded-xl p-[2px] overflow-hidden pointer-events-none"
+                  className="pointer-events-none absolute -inset-1.5 -z-10 rounded-2xl bg-[#00A29F]/40 opacity-0 blur-lg transition-opacity duration-300 group-hover:opacity-100"
+                />
+
+                {/* Revolving border (original), with a brighter, longer tail */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 overflow-hidden rounded-xl p-[2px]"
                   style={{
-                    WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                    WebkitMask:
+                      "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                     WebkitMaskComposite: "xor",
                     maskComposite: "exclude",
                   }}
                 >
                   <span
-                    className="absolute inset-[-250%]"
+                    className="absolute inset-[-250%] group-hover:[animation-duration:1.5s]"
                     style={{
-                      background: "conic-gradient(from 0deg at 50% 50%, transparent 0%, transparent 50%, rgba(0, 162, 159, 0.2) 65%, #00A29F 78%, #22bcba 88%, #52d3d0 96%, transparent 100%)",
+                      background:
+                        "conic-gradient(from 0deg at 50% 50%, transparent 0%, transparent 40%, rgba(0,162,159,0.25) 58%, #00A29F 76%, #22bcba 88%, #7ae6e3 96%, transparent 100%)",
                       animation: "spin 3s linear infinite",
                       willChange: "transform",
                     }}
                   />
                 </span>
 
-                <span className={`relative z-10 inline-flex items-center gap-2 px-5 py-2 rounded-xl backdrop-blur-md text-[11px] font-outfit font-black tracking-[0.15em] uppercase border transition-colors duration-200 ${
-                  isSaltLine
-                    ? "bg-white/10 hover:bg-white/20 text-white group-hover:text-emerald-300 border-white/20"
-                    : "bg-emerald-500/[0.08] hover:bg-emerald-500/[0.14] text-zinc-950 group-hover:text-emerald-600 border-emerald-500/25"
-                }`}>
-                  <span>LET&apos;S TALK</span>
-                  <ArrowUpRight className={`w-3.5 h-3.5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200 ${
-                    isSaltLine ? "text-emerald-400" : "text-emerald-600"
-                  }`} />
+                {/* Button body */}
+                <span
+                  className={`relative z-10 inline-flex items-center gap-2 overflow-hidden rounded-xl border px-5 py-2.5 font-outfit text-[11px] font-black uppercase tracking-[0.15em] backdrop-blur-md transition-colors duration-200 ${t.cta}`}
+                >
+                  {/* Light sweep on hover */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 -left-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent transition-transform duration-700 group-hover:translate-x-[400%]"
+                  />
+                  <span className="relative">LET&apos;S TALK</span>
+                  {/* Arrow circle: rotates up-right and fills on hover */}
+                  <span
+                    className={`relative flex h-5 w-5 items-center justify-center rounded-full transition-all duration-300 group-hover:rotate-45 ${t.ctaIcon}`}
+                  >
+                    <ArrowUpRight className="h-3 w-3 transition-transform duration-300 group-hover:-rotate-45" />
+                  </span>
                 </span>
               </Link>
             </Magnetic>
           </div>
 
-          {/* Mobile Menu Hamburger Toggle */}
+          {/* Mobile toggle */}
           <button
             type="button"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className={`lg:hidden relative z-50 p-2 rounded-xl border transition-colors ${
-              isSaltLine
-                ? "bg-zinc-800/80 border-zinc-700 text-white"
-                : "bg-zinc-100/80 border-zinc-200 text-zinc-900"
-            }`}
-            aria-label="Toggle menu"
+            onClick={() => setMobileOpen((o) => !o)}
+            className={`relative z-50 rounded-xl border p-2 transition-colors lg:hidden ${t.toggle}`}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
           >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <Menu className="h-5 w-5" />
           </button>
+
+          {/* Scroll progress line */}
+          <motion.span
+            aria-hidden="true"
+            style={{ scaleX: progress }}
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-600"
+          />
         </div>
       </header>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-0 z-[60] bg-white flex flex-col justify-between p-6 sm:p-10 lg:hidden overflow-y-auto shadow-2xl"
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site navigation"
+            variants={drawerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className={`fixed inset-0 z-[60] flex flex-col overflow-y-auto p-5 sm:p-10 lg:hidden ${t.drawer}`}
           >
-            {/* Header in Mobile Drawer */}
-            <div className="flex items-center justify-between pb-4 border-b border-zinc-200">
+            {/* Ambient glow */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl"
+            />
+
+            {/* Drawer header */}
+            <motion.div
+              variants={itemVariants}
+              className={`relative flex items-center justify-between border-b pb-4 ${t.drawerBorder}`}
+            >
               <Link
                 href="/"
                 onClick={() => setMobileOpen(false)}
@@ -212,77 +339,103 @@ export const Navigation = () => {
               >
                 <Image
                   src="/VV png.png"
-                  alt="Virtual Velocity Logo"
+                  alt=""
                   width={36}
                   height={36}
                   style={{ width: "auto", height: "auto" }}
-                  className="h-7 w-auto object-contain"
+                  className={`h-7 w-auto object-contain ${t.logoImg}`}
                 />
-                <span className="font-extrabold text-base sm:text-lg text-zinc-950">
-                  VIRTUAL <span className="text-emerald-600">•</span> VELOCITY
+                <span className="font-outfit text-base font-extrabold sm:text-lg">
+                  VIRTUAL <span className="text-emerald-500">•</span> VELOCITY
                 </span>
               </Link>
 
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-zinc-100 hover:bg-emerald-50 text-zinc-900 border border-zinc-200 text-xs font-mono font-bold uppercase transition-all"
                 aria-label="Close menu"
+                className={`flex items-center gap-1.5 rounded-full border px-3.5 py-2 font-mono text-xs font-bold uppercase transition-all ${t.closeBtn}`}
               >
-                <span>CLOSE</span>
-                <X className="w-4 h-4" />
+                <span>Close</span>
+                <X className="h-4 w-4" />
               </button>
-            </div>
+            </motion.div>
 
-            {/* Mobile Nav Links */}
-            <div className="pt-6 flex flex-col gap-3">
-              <span className="text-xs text-emerald-600 uppercase tracking-widest font-extrabold flex items-center gap-1.5">
-                <Compass className="w-3.5 h-3.5" /> NAVIGATION MENU
-              </span>
-              {NAV_LINKS.map((link, idx) => (
-                <motion.div
-                  key={link.label}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 + idx * 0.05, duration: 0.3 }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={`flex items-center justify-between py-3 border-b border-zinc-100 text-2xl font-extrabold font-outfit uppercase transition-colors ${
-                      pathname === link.href ? "text-emerald-600" : "text-zinc-900 hover:text-emerald-600"
-                    }`}
-                  >
-                    <span>{link.label}</span>
-                    {pathname === link.href && (
-                      <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                    )}
-                  </Link>
-                </motion.div>
-              ))}
-
-              <div className="pt-4">
-                <Link
-                  href="/contact"
-                  onClick={() => setMobileOpen(false)}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-outfit font-black text-sm uppercase tracking-wider transition-colors shadow-md"
-                >
-                  <span>LET&apos;S TALK</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Footer Inquiries */}
-            <div className="space-y-1 pt-6 border-t border-zinc-200 mt-6">
-              <span className="text-xs text-zinc-700 font-bold block">INQUIRIES</span>
-              <a
-                href="mailto:info@thevirtualvelocity.com"
-                className="text-sm font-outfit text-zinc-900 hover:text-emerald-600 transition-colors font-bold block"
+            {/* Links */}
+            <nav
+              aria-label="Mobile"
+              className="relative flex flex-1 flex-col justify-center py-8"
+            >
+              <motion.span
+                variants={itemVariants}
+                className="mb-4 text-xs font-extrabold uppercase tracking-[0.25em] text-emerald-500"
               >
-                info@thevirtualvelocity.com
-              </a>
-            </div>
+                Menu
+              </motion.span>
+
+              {NAV_LINKS.map((link, idx) => {
+                const isActive = pathname === link.href;
+                return (
+                  <motion.div key={link.href} variants={itemVariants}>
+                    <Link
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      aria-current={isActive ? "page" : undefined}
+                      className={`group flex items-baseline gap-4 border-b py-3.5 font-outfit text-3xl font-extrabold uppercase tracking-tight transition-colors sm:text-4xl ${t.drawerBorder} ${
+                        isActive ? t.drawerLinkActive : t.drawerLink
+                      }`}
+                    >
+                      <span
+                        className={`font-mono text-xs font-bold tracking-widest ${t.drawerMuted}`}
+                      >
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span className="flex-1 transition-transform duration-300 group-hover:translate-x-2">
+                        {link.label}
+                      </span>
+                      <ArrowUpRight
+                        className={`h-5 w-5 self-center transition-all duration-300 ${
+                          isActive
+                            ? "opacity-100"
+                            : "-translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
+                        }`}
+                      />
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </nav>
+
+            {/* CTA + inquiries */}
+            <motion.div variants={itemVariants} className="relative space-y-5">
+              <Link
+                href="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-6 py-4 font-outfit text-sm font-black uppercase tracking-wider text-zinc-950 shadow-lg shadow-emerald-500/20 transition-colors hover:bg-emerald-400 active:scale-[0.99]"
+              >
+                <span>LET&apos;S TALK</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+
+              <div
+                className={`flex items-center gap-3 border-t pt-5 ${t.drawerBorder}`}
+              >
+                <Mail className={`h-4 w-4 ${t.drawerMuted}`} />
+                <div>
+                  <span
+                    className={`block text-[10px] font-bold uppercase tracking-[0.2em] ${t.drawerMuted}`}
+                  >
+                    Inquiries
+                  </span>
+                  <a
+                    href="mailto:info@thevirtualvelocity.com"
+                    className="block font-outfit text-sm font-bold transition-colors hover:text-emerald-500"
+                  >
+                    info@thevirtualvelocity.com
+                  </a>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
