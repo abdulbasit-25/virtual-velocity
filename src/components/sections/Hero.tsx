@@ -5,7 +5,7 @@ import { ArrowDown, Globe, ShieldCheck, Zap } from "lucide-react";
 import { SplitTextReveal } from "@/components/ui/SplitTextReveal";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { HeroCanvas3D } from "@/components/ui/HeroCanvas3D";
-import { AGENCY_INFO } from "@/data/agencyData";
+import { AGENCY_INFO, AGENCY_METRICS } from "@/data/agencyData";
 
 export const Hero = () => {
   return (
@@ -93,7 +93,7 @@ export const Hero = () => {
         <div className="md:col-span-5 flex flex-col sm:flex-row items-start sm:items-center justify-between md:justify-end gap-4 sm:gap-6">
           <div className="flex items-center gap-4 sm:gap-8 text-[10px] sm:text-xs font-mono tracking-widest text-zinc-700">
             <div>
-              <span className="block text-zinc-900 font-black text-lg sm:text-xl">140+</span>
+              <span className="block text-zinc-900 font-black text-lg sm:text-xl">{AGENCY_METRICS.campaignsManaged.display}</span>
               <span className="text-[9px] sm:text-[10px] uppercase font-bold text-zinc-700">PROJECTS DELIVERED</span>
             </div>
             <div className="w-px h-6 sm:h-8 bg-zinc-200" />
