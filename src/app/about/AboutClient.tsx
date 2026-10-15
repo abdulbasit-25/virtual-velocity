@@ -11,7 +11,7 @@ import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
-import { FOUNDER, AGENCY_INFO } from "@/data/agencyData";
+import { AGENCY_METRICS, FOUNDER, AGENCY_INFO } from "@/data/agencyData";
 import {
   Zap,
   Sparkles,
@@ -37,15 +37,15 @@ const COMMUNITIES = [
 
 const STATS = [
   {
-    to: 7,
+    to: AGENCY_METRICS.teamExperienceYears,
     suffix: "+",
     decimals: 0,
-    title: "Years of Experience",
+    title: "Years of Team Experience",
     text: "Transforming ambitious brands globally.",
     accent: true,
   },
   {
-    to: 240,
+    to: AGENCY_METRICS.campaignsManaged.target,
     suffix: "+",
     decimals: 0,
     title: "Campaigns Deployed",
@@ -413,7 +413,7 @@ export function AboutClient() {
                     Proprietary Media Communities
                   </span>
                   <p className="text-2xl font-black leading-tight tracking-tight sm:text-3xl">
-                    <span className="text-[#2dd4cf]">~2.95M+</span> direct
+                    <span className="text-[#2dd4cf]">~{AGENCY_METRICS.ownedAudience.display}</span> direct
                     audience across our in-house portals.
                   </p>
                   <p className="text-sm font-medium text-zinc-400 sm:text-base">
@@ -440,7 +440,7 @@ export function AboutClient() {
               icon={<Sparkles className="h-4 w-4" aria-hidden="true" />}
               index="02"
               title="The Agency Story"
-              aside="7+ Years of Impact"
+              aside={`${AGENCY_METRICS.teamExperienceYears}+ Years of Team Experience`}
             />
 
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
@@ -465,7 +465,7 @@ export function AboutClient() {
                     From hospitality, retail, and food to lifestyle, beauty, and
                     technology, we partner with ambitious businesses to build a
                     dominant digital presence and turn brand vision into
-                    tangible results. With 7+ years of experience and endless
+                    tangible results. With {AGENCY_METRICS.teamExperienceYears}+ years of team experience and endless
                     ways to move your brand forward, Virtual Velocity is built
                     for scale.
                   </p>
