@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import Image from "next/image";
 import { ShieldCheck, Sparkles } from "lucide-react";
+import { SectionHeader } from "@/components/sections/home/primitives";
 
 interface BrandItem {
   src: string;
@@ -42,67 +43,81 @@ const BRANDS: BrandItem[] = [
 ];
 
 const ROW_1 = BRANDS.slice(0, 15);
-const ROW_2 = BRANDS.slice(15, 30);
+const ROW_2 = BRANDS.slice(15);
 
-export const AboutClientLogosSlider = () => {
+function LogoTrack({
+  brands,
+  direction,
+}: {
+  brands: BrandItem[];
+  direction: "left" | "right";
+}) {
   return (
-    <section className="py-12 sm:py-16 bg-transparent text-zinc-900 relative overflow-hidden select-none font-outfit border-t border-zinc-200">
-      <div className="max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12 mb-10 sm:mb-14 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-zinc-200 pb-5 sm:pb-6">
-        <div className="space-y-1.5">
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-emerald-600 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-600" />
-            GLOBAL CLIENT ECOSYSTEM
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-outfit font-black uppercase tracking-tight text-zinc-950">
-            TRUSTED BY <span className="text-emerald-600">30+ INDUSTRY LEADERS</span>
-          </h2>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-mono font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-2">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            PROVEN BRAND RETENTION
-          </span>
-        </div>
-      </div>
-
-      {/* Dual Infinite Slider Tracks with ample top spacing from upper boundary */}
-      <div className="relative z-10 mt-4 sm:mt-6 pt-2 sm:pt-4 space-y-3 sm:space-y-6 overflow-hidden">
-        {/* Track 1: Moving Left */}
-        <div className="flex w-max space-x-3 sm:space-x-5 animate-marquee-left hover:[animation-play-state:paused]">
-          {[...ROW_1, ...ROW_1, ...ROW_1].map((brand, idx) => (
-            <div
-              key={`row1-${brand.name}-${idx}`}
-              className="shrink-0 w-[52px] h-[52px] xs:w-[62px] xs:h-[62px] sm:w-[80px] sm:h-[80px] lg:w-[88px] lg:h-[88px] rounded-full bg-white border border-zinc-200/90 sm:border-2 hover:border-[#00A29F] p-1 sm:p-1.5 flex items-center justify-center transition-all duration-300 group hover:scale-105 shadow-xs hover:shadow-lg"
-            >
-              <img
-                src={brand.src}
-                alt={brand.name}
-                className="max-h-[92%] max-w-[92%] w-auto h-auto object-contain transition-all duration-300 drop-shadow-xs"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Track 2: Moving Right */}
-        <div className="flex w-max space-x-3 sm:space-x-5 animate-marquee-right hover:[animation-play-state:paused]">
-          {[...ROW_2, ...ROW_2, ...ROW_2].map((brand, idx) => (
-            <div
-              key={`row2-${brand.name}-${idx}`}
-              className="shrink-0 w-[52px] h-[52px] xs:w-[62px] xs:h-[62px] sm:w-[80px] sm:h-[80px] lg:w-[88px] lg:h-[88px] rounded-full bg-white border border-zinc-200/90 sm:border-2 hover:border-[#00A29F] p-1 sm:p-1.5 flex items-center justify-center transition-all duration-300 group hover:scale-105 shadow-xs hover:shadow-lg"
-            >
-              <img
-                src={brand.src}
-                alt={brand.name}
-                className="max-h-[92%] max-w-[92%] w-auto h-auto object-contain transition-all duration-300 drop-shadow-xs"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <ul
+      aria-hidden="true"
+      className={`animate-marquee-${direction} hover:[animation-play-state:paused] flex w-max items-center gap-3 px-2 sm:gap-5`}
+    >
+      {[...brands, ...brands].map((brand, index) => (
+        <li
+          key={`${brand.name}-${index}`}
+          className="flex h-[72px] w-[112px] shrink-0 items-center justify-center rounded-xl border border-zinc-200 bg-white px-4 py-3 transition-all duration-300 hover:border-[#00A29F]/50 hover:shadow-md sm:h-[88px] sm:w-[148px] sm:rounded-2xl"
+        >
+          <Image
+            src={brand.src}
+            alt=""
+            width={120}
+            height={64}
+            sizes="(max-width: 640px) 112px, 148px"
+            className="h-8 w-full object-contain grayscale opacity-60 transition-all duration-300 hover:grayscale-0 hover:opacity-100 sm:h-10"
+          />
+        </li>
+      ))}
+    </ul>
   );
-};
+}
+
+export const AboutClientLogosSlider = () => (
+  <section
+    aria-label="Client and partner brands"
+    className="home-section relative overflow-hidden border-t border-zinc-200 bg-white text-zinc-900"
+  >
+    <div className="home-container">
+      <SectionHeader
+        eyebrow={<><Sparkles aria-hidden="true" className="h-3.5 w-3.5" /> Global client ecosystem</>}
+        index="06"
+        title={<>Trusted by <span className="text-[#00A29F]">Ambitious Brands.</span></>}
+        aside={
+          <span className="inline-flex items-center gap-2">
+            <ShieldCheck aria-hidden="true" className="h-4 w-4 text-[#006766]" />
+            Proven brand retention
+          </span>
+        }
+      />
+    </div>
+
+    <ul className="sr-only" aria-label="Partner brands">
+      {BRANDS.map((brand) => (
+        <li key={brand.name}>{brand.name}</li>
+      ))}
+    </ul>
+    <div className="hover-marquee group relative space-y-3 overflow-hidden sm:space-y-5">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-white to-transparent sm:w-20"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-white to-transparent sm:w-20"
+      />
+      <div className="group-hover:[animation-play-state:paused]">
+        <LogoTrack brands={ROW_1} direction="left" />
+      </div>
+      <div className="group-hover:[animation-play-state:paused]">
+        <LogoTrack brands={ROW_2} direction="right" />
+      </div>
+    </div>
+    <p className="home-container mt-5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-600">
+      30+ Global Partner Brands
+    </p>
+  </section>
+);
