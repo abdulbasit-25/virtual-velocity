@@ -319,10 +319,7 @@ function CountUp({
   const [value, setValue] = useState(reduce ? to : 0);
 
   useEffect(() => {
-    if (reduce) {
-      setValue(to);
-      return;
-    }
+    if (reduce) return;
     if (!inView) return;
     const controls = animate(0, to, {
       duration: 1.6,
@@ -332,9 +329,11 @@ function CountUp({
     return () => controls.stop();
   }, [inView, to, reduce]);
 
+  const displayedValue = reduce ? to : value;
+
   return (
     <span ref={ref} className="tabular-nums">
-      {value.toFixed(decimals)}
+      {displayedValue.toFixed(decimals)}
       {suffix}
     </span>
   );
