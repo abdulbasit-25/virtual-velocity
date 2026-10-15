@@ -102,10 +102,18 @@ const itemVariants: Variants = {
 };
 
 export const Navigation = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const [mobileMenu, setMobileMenu] = useState<{
+    pathname: string;
+    open: boolean;
+  }>(() => ({ pathname, open: false }));
   const [scrolled, setScrolled] = useState(false);
   const [hoveredHref, setHoveredHref] = useState<string | null>(null);
-  const pathname = usePathname();
+  const mobileOpen = mobileMenu.open;
+
+  if (mobileMenu.pathname !== pathname) {
+    setMobileMenu({ pathname, open: false });
+  }
 
   const isSaltLine = pathname === "/the-salt-line";
   const t = isSaltLine ? THEMES.dark : THEMES.light;
@@ -122,16 +130,11 @@ export const Navigation = () => {
     setScrolled(latest > 20);
   });
 
-  /* Close drawer on route change */
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
-
   /* Lock body scroll + Escape to close while drawer is open */
   useEffect(() => {
     if (!mobileOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileOpen(false);
+      if (e.key === "Escape") setMobileMenu({ pathname, open: false });
     };
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
@@ -139,7 +142,7 @@ export const Navigation = () => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
-  }, [mobileOpen]);
+  }, [mobileOpen, pathname]);
 
   return (
     <>
@@ -289,7 +292,9 @@ export const Navigation = () => {
           {/* Mobile toggle */}
           <button
             type="button"
-            onClick={() => setMobileOpen((o) => !o)}
+            onClick={() =>
+              setMobileMenu((current) => ({ pathname, open: !current.open }))
+            }
             className={`relative z-50 rounded-xl border p-2 transition-colors lg:hidden ${t.toggle}`}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -334,7 +339,7 @@ export const Navigation = () => {
             >
               <Link
                 href="/"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => setMobileMenu({ pathname, open: false })}
                 className="flex items-center gap-2"
               >
                 <Image
@@ -352,7 +357,7 @@ export const Navigation = () => {
 
               <button
                 type="button"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => setMobileMenu({ pathname, open: false })}
                 aria-label="Close menu"
                 className={`flex items-center gap-1.5 rounded-full border px-3.5 py-2 font-mono text-xs font-bold uppercase transition-all ${t.closeBtn}`}
               >
@@ -379,7 +384,7 @@ export const Navigation = () => {
                   <motion.div key={link.href} variants={itemVariants}>
                     <Link
                       href={link.href}
-                      onClick={() => setMobileOpen(false)}
+                      onClick={() => setMobileMenu({ pathname, open: false })}
                       aria-current={isActive ? "page" : undefined}
                       className={`group flex items-baseline gap-4 border-b py-3.5 font-outfit text-3xl font-extrabold uppercase tracking-tight transition-colors sm:text-4xl ${t.drawerBorder} ${
                         isActive ? t.drawerLinkActive : t.drawerLink
@@ -410,7 +415,7 @@ export const Navigation = () => {
             <motion.div variants={itemVariants} className="relative space-y-5">
               <Link
                 href="/contact"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => setMobileMenu({ pathname, open: false })}
                 className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-6 py-4 font-outfit text-sm font-black uppercase tracking-wider text-zinc-950 shadow-lg shadow-emerald-500/20 transition-colors hover:bg-emerald-400 active:scale-[0.99]"
               >
                 <span>LET&apos;S TALK</span>
