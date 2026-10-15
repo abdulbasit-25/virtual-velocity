@@ -75,6 +75,11 @@ function SelectedServices() {
   );
 }
 
+function ContactForm() {
+  const params = useSearchParams();
+  return <Contact servicesQuery={params.get("services")} />;
+}
+
 export function ContactClient() {
   const reduce = useReducedMotion();
 
@@ -204,7 +209,9 @@ export function ContactClient() {
 
         {/* Form */}
         <div id="contact-form" className="scroll-mt-24">
-          <Contact />
+          <Suspense fallback={<Contact />}>
+            <ContactForm />
+          </Suspense>
         </div>
 
         <Footer />
