@@ -58,7 +58,7 @@ const OFFICES = [
 ];
 
 const EMAILS = [
-  { label: "New Business", email: "info@thevirtualvelocity.com" },
+  { label: "New Business (BDO)", email: "info@thevirtualvelocity.com" },
   { label: "General Queries", email: "admin@thevirtualvelocity.com" },
 ];
 
