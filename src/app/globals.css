@@ -11,6 +11,11 @@
     --accent: #00A29F;
     --accent-secondary: #007d7b;
     --muted: #6b7a72;
+    --vv-container-width: 1700px;
+    --vv-section-space: clamp(5rem, 8vw, 8rem);
+    --vv-heading-size: clamp(2rem, 5.5vw, 5rem);
+    --vv-card-radius: 1.5rem;
+    --vv-card-shadow: 0 18px 55px -30px rgba(0, 80, 78, 0.28);
   }
 }
 
@@ -44,6 +49,28 @@
   --color-emerald-800: #035251;
   --color-emerald-900: #074443;
   --color-emerald-950: #012727;
+}
+
+@layer components {
+  .home-section {
+    padding-block: var(--vv-section-space);
+  }
+
+  .home-container {
+    width: min(calc(100% - 2rem), var(--vv-container-width));
+    margin-inline: auto;
+  }
+
+  .home-heading {
+    font-size: var(--vv-heading-size);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+  }
+
+  .home-card {
+    border-radius: var(--vv-card-radius);
+    box-shadow: var(--vv-card-shadow);
+  }
 }
 
 html {
