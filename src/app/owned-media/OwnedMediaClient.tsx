@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/Footer";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { Magnetic } from "@/components/ui/Magnetic";
+import { AGENCY_METRICS } from "@/data/agencyData";
 import {
   ArrowUpRight,
   ArrowDown,
@@ -610,7 +611,7 @@ export function OwnedMediaClient() {
               </span>
 
               <h1 className="select-none text-[clamp(2.25rem,7vw,5rem)] font-black uppercase leading-[0.92] tracking-tighter text-zinc-950">
-                <span className="text-emerald-600">2.95M+</span> Direct Reach.
+                <span className="text-emerald-600">{AGENCY_METRICS.ownedAudience.display}</span> Direct Reach.
                 <br />
                 Seven Channels. Zero Middlemen.
               </h1>
@@ -862,7 +863,7 @@ export function OwnedMediaClient() {
                   Brand Amplification
                 </span>
                 <h2 className="mt-4 text-2xl font-black uppercase leading-tight tracking-tight text-white sm:mt-5 sm:text-3xl lg:text-4xl">
-                  Amplify Your Brand Across 2.95M+ Audience
+                  Amplify Your Brand Across {AGENCY_METRICS.ownedAudience.display} Audience
                 </h2>
                 <p className="mt-3 text-sm font-normal leading-relaxed text-white/90 sm:mt-4 lg:text-base">
                   Tap into Virtual Velocity&apos;s influential regional media
