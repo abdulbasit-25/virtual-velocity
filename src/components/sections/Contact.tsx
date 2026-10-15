@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Loader2,
 } from "lucide-react";
+import { RevolvingCTA } from "@/components/sections/home/primitives";
 
 const SERVICE_OPTIONS = [
   "Branding",
@@ -244,7 +245,7 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
   };
 
   const reveal = (delay = 0) => ({
-    initial: { opacity: 0, y: reduce ? 0 : 24 },
+    initial: { opacity: reduce ? 1 : 0, y: reduce ? 0 : 24 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-60px" },
     transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const },
@@ -305,11 +306,15 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
                 </div>
               </div>
             </motion.div>
+            <div className="pt-1">
+              <RevolvingCTA href="#contact-form">Free Growth Audit</RevolvingCTA>
+            </div>
           </div>
         </div>
 
         {/* Form card */}
         <motion.div
+          id="contact-form"
           {...reveal(0.15)}
           className="lg:col-span-7 bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_20px_60px_-15px_rgba(0,162,159,0.12),0_8px_30px_rgba(0,0,0,0.04)] p-4 min-[420px]:p-6 sm:p-10 lg:p-12 rounded-2xl sm:rounded-3xl relative flex flex-col justify-between text-zinc-900 overflow-hidden font-inter"
         >
