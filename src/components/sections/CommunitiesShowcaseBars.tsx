@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { AGENCY_METRICS } from "@/data/agencyData";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -250,7 +251,7 @@ export function CommunitiesShowcaseBars() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <span className="text-xs font-mono uppercase tracking-widest text-emerald-700 font-extrabold block">
-            Proprietary Media Communities — 2.95M+ Direct Audience
+            Proprietary Media Communities — {AGENCY_METRICS.ownedAudience.display} Direct Audience
           </span>
           <p className="text-xs sm:text-sm text-zinc-800 font-medium">
             Virtual Velocity&apos;s verified digital network driving viral organic reach, culture, and high-impact regional engagement.
@@ -258,7 +259,7 @@ export function CommunitiesShowcaseBars() {
         </div>
         <div className="flex items-center gap-2">
           <span className="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-300 text-xs font-mono font-bold text-emerald-800 shadow-xs">
-            2.95M+ VERIFIED NETWORK
+            {AGENCY_METRICS.ownedAudience.display} VERIFIED NETWORK
           </span>
         </div>
       </div>
