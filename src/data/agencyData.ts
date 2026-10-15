@@ -13,9 +13,17 @@ export interface Project {
   solution: string;
   results: string[];
   services: string[];
-  liveUrl: string;
+  liveUrl?: string;
   layoutType?: "right-large" | "left-large" | "full-width" | "asymmetric";
 }
+
+export const AGENCY_METRICS = {
+  establishedYear: 2026,
+  teamExperienceYears: 7,
+  campaignsManaged: { target: 140, display: "140+" },
+  ownedAudience: { target: 2.95, display: "2.95M+" },
+  averageRoas: { target: 4.8, display: "4.8x" },
+} as const;
 
 export interface Service {
   id: string;
@@ -88,7 +96,7 @@ export const FOUNDER: Founder = {
 export const AGENCY_INFO = {
   name: "VIRTUAL VELOCITY",
   tagline: "A Creative House Built for Brands That Want to Move Forward",
-  subTagline: "7+ years of experience transforming ambitious brands through distinct visual identities, high-impact digital campaigns, and data-driven performance marketing.",
+  subTagline: `${AGENCY_METRICS.teamExperienceYears}+ years of team experience transforming ambitious brands through distinct visual identities, high-impact digital campaigns, and data-driven performance marketing.`,
   founder: FOUNDER,
   offices: [
     {
@@ -190,7 +198,6 @@ export const PROJECTS: Project[] = [
     solution: "We restructured their Google Search & Shopping campaigns, implemented hyper-targeted Meta retargeting, and optimized checkout conversion funnels.",
     results: ["+185% Increase in Customer Conversion Rate", "4.6x Average ROAS on Paid Search", "$14.2M Generated in Q1 Campaign Sales"],
     services: ["Google Ads PPC", "Meta Paid Social", "Conversion Rate Optimization (CRO)", "Klaviyo Email Funnels"],
-    liveUrl: "https://nexus-ecommerce.example.com",
     layoutType: "right-large",
   },
   {
@@ -208,7 +215,6 @@ export const PROJECTS: Project[] = [
     solution: "We executed comprehensive technical SEO audits, structured rich search schema markup, and published authority content clusters.",
     results: ["+2,900% Organic Search Traffic Growth", "#1 Ranking for 42 Commercial Banking Terms", "3.4x Growth in Qualified Inbound B2B Leads"],
     services: ["Technical SEO Audits", "Keyword Strategy & Content Hubs", "B2B Lead Generation"],
-    liveUrl: "https://vertex-fintech.example.com",
     layoutType: "left-large",
   },
   {
@@ -226,7 +232,6 @@ export const PROJECTS: Project[] = [
     solution: "Designed high-converting landing page strategies alongside hyper-targeted Search, YouTube, and Paid Social campaigns.",
     results: ["-42% Reduction in Patient Acquisition Cost", "+310% Increase in Online Patient Appointments", "4.8x Return on Ad Spend (ROAS)"],
     services: ["Google Search Ads", "Meta Paid Social", "Landing Page Copywriting", "Conversion Rate Optimization (CRO)"],
-    liveUrl: "https://zenith-health.example.com",
     layoutType: "full-width",
   },
   {
@@ -244,7 +249,6 @@ export const PROJECTS: Project[] = [
     solution: "Authored multi-channel video ad creative, coordinated automotive influencer activations, and managed targeted lead campaigns.",
     results: ["1.8M Unique Campaign Sessions", "14 Minute Average Dwell Time", "$48M in Online Vehicle Pre-Orders"],
     services: ["Global Brand Strategy", "Social Video Marketing", "Influencer Partnerships", "Lead Generation Funnels"],
-    liveUrl: "https://solaris-ev.example.com",
     layoutType: "asymmetric",
   },
 ];
@@ -377,7 +381,7 @@ export const SERVICES: Service[] = [
     title: "INFLUENCER MARKETING & PROPRIETARY MEDIA",
     category: "STRATEGIC",
     shortDescription: "Influencer partnerships, campaign management, and proprietary channel activations (Rawalpindians, Islamabad Insider, Sirf Chai).",
-    description: "Amplify your brand reach through direct access to 2.5M+ local consumers on our proprietary media network and targeted creator partnerships.",
+    description: `Amplify your brand reach through direct access to ${AGENCY_METRICS.ownedAudience.display} local consumers on our proprietary media network and targeted creator partnerships.`,
     deliverables: ["Proprietary Channel Activations", "Influencer Strategy", "Campaign Tracking", "ROI Analysis"],
     techStack: ["Rawalpindians Network", "Islamabad Insider", "Sirf Chai", "Social Blade"],
     previewImage: "/services/05  Influencer & PR_.webp",
@@ -557,8 +561,8 @@ export const BLOG_POSTS: BlogPost[] = [
 ];
 
 export const STATS = [
-  { label: "CAMPAIGNS MANAGED", value: "240+", note: "Google, Meta & SEO", detail: "Executed across United States & international markets" },
-  { label: "AVERAGE ROAS GENERATED", value: "4.8x", note: "Across PPC & Social", detail: "Measured across Google & Meta campaigns" },
+  { label: "CAMPAIGNS MANAGED", value: AGENCY_METRICS.campaignsManaged.display, note: "Google, Meta & SEO", detail: "Executed across United States & international markets" },
+  { label: "AVERAGE ROAS GENERATED", value: AGENCY_METRICS.averageRoas.display, note: "Across PPC & Social", detail: "Measured across Google & Meta campaigns" },
   { label: "ORGANIC TRAFFIC GROWTH", value: "320%", note: "Client Average", detail: "Technical SEO & content hub scaling" },
   { label: "CLIENT RETENTION RATE", value: "98%", note: "Long-Term Partnerships", detail: "Multi-year retainers & strategy support" },
 ];
