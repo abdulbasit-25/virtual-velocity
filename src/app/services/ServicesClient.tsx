@@ -14,7 +14,7 @@ import { Footer } from "@/components/layout/Footer";
 import { ServicesClientLogosCarousel } from "@/components/sections/ServicesClientLogosCarousel";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
-import { SERVICES } from "@/data/agencyData";
+import { AGENCY_METRICS, SERVICES } from "@/data/agencyData";
 import { Magnetic } from "@/components/ui/Magnetic";
 import {
   ArrowUpRight,
@@ -86,7 +86,7 @@ const PROCESS_STEPS = [
 ];
 
 const HERO_STATS = [
-  { value: "140+", label: "Projects delivered", accent: false },
+  { value: AGENCY_METRICS.campaignsManaged.display, label: "Projects delivered", accent: false },
   { value: "4.8x", label: "Avg client ROAS", accent: true },
   { value: "3", label: "Global offices", accent: false, icon: true },
 ];
