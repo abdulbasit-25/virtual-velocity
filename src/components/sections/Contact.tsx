@@ -120,6 +120,7 @@ function HubClock({ timezone }: { timezone: string }) {
 }
 
 type ContactProps = {
+  servicesQuery?: string | null;
   /**
    * Where to POST the brief as JSON. If omitted, the form only shows the
    * success screen and sends nothing (same as before).
@@ -127,7 +128,30 @@ type ContactProps = {
   endpoint?: string;
 };
 
-export const Contact = ({ endpoint }: ContactProps) => {
+function getServicePrefill(servicesQuery?: string | null) {
+  if (!servicesQuery) {
+    return { selectedServices: ["Google Advertising"], message: "" };
+  }
+
+  const requested = servicesQuery
+    .split(",")
+    .map((service) => service.trim())
+    .filter(Boolean)
+    .slice(0, 12);
+  if (!requested.length) {
+    return { selectedServices: ["Google Advertising"], message: "" };
+  }
+
+  const { matched, unmatched } = matchServices(requested);
+  return {
+    selectedServices: matched.length ? matched : ["Google Advertising"],
+    message: unmatched.length
+      ? `I'm interested in: ${unmatched.join(", ")}.\n\n`
+      : "",
+  };
+}
+
+export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
   const reduce = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -135,10 +159,10 @@ export const Contact = ({ endpoint }: ContactProps) => {
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
   const [step, setStep] = useState<1 | 2>(1);
   const [stepError, setStepError] = useState("");
-  const [selectedServices, setSelectedServices] = useState<string[]>([
-    "Google Advertising",
-  ]);
-  const [formData, setFormData] = useState({
+  const [selectedServices, setSelectedServices] = useState<string[]>(
+    () => getServicePrefill(servicesQuery).selectedServices,
+  );
+  const [formData, setFormData] = useState(() => ({
     name: "",
     email: "",
     phone: "",
@@ -146,34 +170,9 @@ export const Contact = ({ endpoint }: ContactProps) => {
     designation: "",
     budget: "$15k - $50k",
     hearAbout: "Google Search",
-    message: "",
+    message: getServicePrefill(servicesQuery).message,
     website: "", // honeypot: real people never see or fill this
-  });
-
-  // Prefill from /contact?services=A, B (sent by the Services page)
-  useEffect(() => {
-    const raw = new URLSearchParams(window.location.search).get("services");
-    if (!raw) return;
-    const requested = raw
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .slice(0, 12);
-    if (!requested.length) return;
-
-    const { matched, unmatched } = matchServices(requested);
-    if (matched.length) setSelectedServices(matched);
-    if (unmatched.length) {
-      setFormData((f) =>
-        f.message
-          ? f
-          : {
-              ...f,
-              message: `I'm interested in: ${unmatched.join(", ")}.\n\n`,
-            },
-      );
-    }
-  }, []);
+  }));
 
   const toggleService = (service: string) => {
     setStepError("");
