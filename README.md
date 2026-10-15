@@ -19,7 +19,7 @@ This platform is engineered using modern web technologies:
 * **Framework:** [Next.js 16 (Turbopack, App Router)](https://nextjs.org/)
 * **Library:** [React 19](https://react.dev/)
 * **Language:** [TypeScript 5](https://www.typescriptlang.org/)
-* **Styling:** [Tailwind CSS 3.4](https://tailwindcss.com/) with fluid typography clamps & custom responsive breakpoints (`xs: 375px`)
+* **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) with CSS-first theme tokens, fluid typography clamps, and a custom responsive breakpoint (`xs: 375px`)
 * **Motion & Animation:**
   * [GSAP 3](https://greensock.com/gsap/) with [ScrollTrigger](https://greensock.com/scrolltrigger/) and `@gsap/react`
   * [Framer Motion 12](https://www.framer.com/motion/)
@@ -150,6 +150,7 @@ npm run lint
 │   │   ├── layout/             # Universal Navigation & Footer components
 │   │   ├── providers/          # SmoothScrollProvider (Lenis & GSAP ticker sync)
 │   │   ├── sections/           # Modular page sections (Hero, About, Services, etc.)
+│   │   │   └── home/           # Shared homepage presentation and motion primitives
 │   │   └── ui/                 # Reusable UI primitives (Cursor, CTAs, Audio, Parallax)
 │   └── data/
 │       └── agencyData.ts       # Central source of truth (Founder, Services, Case Studies)
