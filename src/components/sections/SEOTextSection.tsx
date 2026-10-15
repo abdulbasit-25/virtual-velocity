@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, HelpCircle, CheckCircle2, ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { CheckCircle2, Minus, Plus } from "lucide-react";
+import { AGENCY_METRICS } from "@/data/agencyData";
+import { SectionHeader } from "@/components/sections/home/primitives";
 
 const FAQS = [
   {
     id: "faq-1",
     q: "Why is Virtual Velocity the leading Digital Marketing Agency in Pakistan and Islamabad?",
-    a: "Virtual Velocity is a full-service Digital Marketing Agency in Pakistan and Islamabad providing end-to-end Digital Marketing Services, Google Ads PPC, Meta Ads Agency campaigns, Technical SEO, and proprietary media reach across 2.5M+ active regional consumers.",
+    a: `Virtual Velocity is a full-service Digital Marketing Agency in Pakistan and Islamabad providing end-to-end Digital Marketing Services, Google Ads PPC, Meta Ads Agency campaigns, Technical SEO, and proprietary media reach across ${AGENCY_METRICS.ownedAudience.display} active regional consumers.`,
   },
   {
     id: "faq-2",
@@ -34,35 +37,24 @@ const FAQS = [
 
 export const SEOTextSection = () => {
   const [openFaqId, setOpenFaqId] = useState<string | null>("faq-1");
+  const reduceMotion = useReducedMotion();
 
   const toggleFaq = (id: string) => {
     setOpenFaqId((prev) => (prev === id ? null : id));
   };
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-12 bg-zinc-50 text-zinc-900 border-t border-zinc-200 font-outfit select-none overflow-x-hidden">
-      <div className="max-w-[1700px] mx-auto flex flex-col items-center">
-        {/* Centered Agency FAQ Section */}
-        <div className="w-full max-w-4xl mx-auto space-y-8">
-          {/* Centered Header */}
-          <div className="text-center space-y-3 flex flex-col items-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00A29F]/10 border border-[#00A29F]/25">
-              <Sparkles className="w-3.5 h-3.5 text-[#00A29F]" />
-              <span className="text-[11px] sm:text-xs font-mono font-extrabold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#00A29F]">
-                FREQUENTLY ASKED QUESTIONS
-              </span>
-            </div>
+    <section className="home-section overflow-x-hidden border-t border-zinc-200 bg-zinc-50 px-4 text-zinc-900 sm:px-8 lg:px-12">
+      <div className="home-container">
+        <SectionHeader
+          eyebrow="Frequently Asked Questions"
+          index="08"
+          title={<>Everything You Need to <span className="text-[#00A29F]">Know</span></>}
+          description="Clear answers regarding our Digital Marketing, BPO &amp; Outsourcing, Hospitality, Restaurant Lead Generation, and Performance Advertising capabilities."
+          className="mx-auto max-w-4xl text-center sm:flex-col sm:items-center"
+        />
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-zinc-950 tracking-tight leading-tight">
-              Everything You Need to <span className="text-[#00A29F]">Know</span>
-            </h2>
-            <p className="text-xs sm:text-base text-zinc-600 max-w-xl mx-auto font-normal leading-relaxed">
-              Clear answers regarding our Digital Marketing, BPO &amp; Outsourcing, Hospitality, Restaurant Lead Generation, and Performance Advertising capabilities.
-            </p>
-          </div>
-
-          {/* Centered Dropdown Accordion List */}
-          <div className="space-y-3 w-full pt-2">
+          <div className="mx-auto w-full max-w-4xl space-y-3">
             {FAQS.map((faq) => {
               const isOpen = openFaqId === faq.id;
               return (
@@ -77,14 +69,15 @@ export const SEOTextSection = () => {
                     onClick={() => toggleFaq(faq.id)}
                     aria-expanded={isOpen}
                     aria-controls={`${faq.id}-content`}
-                    className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer select-none focus:outline-none min-h-[52px]"
+                    id={`${faq.id}-question`}
+                    className="flex min-h-14 w-full cursor-pointer select-none items-center justify-between gap-4 p-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#00A29F] sm:p-5"
                   >
                     <span className="text-sm sm:text-base font-bold text-zinc-900 uppercase flex items-center gap-2.5 leading-snug">
                       <CheckCircle2 className={`w-4 h-4 shrink-0 transition-colors ${isOpen ? "text-emerald-600" : "text-zinc-400"}`} />
                       <span>{faq.q}</span>
                     </span>
-                    <div className={`p-1.5 rounded-full transition-transform duration-300 shrink-0 ${isOpen ? "rotate-180 bg-emerald-50 text-emerald-600" : "bg-zinc-100 text-zinc-500"}`}>
-                      <ChevronDown className="w-4 h-4" />
+                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-transform duration-300 ${isOpen ? "rotate-180 bg-emerald-50 text-emerald-600" : "bg-zinc-100 text-zinc-500"}`}>
+                      {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                     </div>
                   </button>
 
@@ -92,10 +85,12 @@ export const SEOTextSection = () => {
                     {isOpen && (
                       <motion.div
                         id={`${faq.id}-content`}
+                        role="region"
+                        aria-labelledby={`${faq.id}-question`}
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
                         <div className="px-4 pb-5 sm:px-5 sm:pb-6 pt-1 text-xs sm:text-sm text-zinc-700 font-normal leading-relaxed pl-10 sm:pl-11 border-t border-zinc-100 text-left">
@@ -108,12 +103,18 @@ export const SEOTextSection = () => {
               );
             })}
           </div>
-        </div>
+          <div className="mx-auto mt-6 flex max-w-4xl flex-wrap items-center justify-center gap-3 text-center">
+            <p className="text-sm font-semibold text-zinc-700">Still have questions?</p>
+            <Link
+              href="#contact"
+              className="inline-flex min-h-11 items-center rounded-full border border-[#00A29F]/35 bg-white px-5 py-2 text-sm font-bold text-[#006766] transition-colors hover:bg-[#00A29F] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A29F] focus-visible:ring-offset-2"
+            >
+              Talk to us
+            </Link>
+          </div>
       </div>
     </section>
   );
 };
-
-
 
 
