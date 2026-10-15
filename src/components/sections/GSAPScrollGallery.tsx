@@ -1,226 +1,188 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { PROJECTS } from "@/data/agencyData";
-import { Layers, TrendingUp, ArrowUpRight, BarChart2 } from "lucide-react";
-import { Magnetic } from "@/components/ui/Magnetic";
-import { loadGsap } from "@/lib/gsapClient";
+import { ArrowUpRight, Briefcase } from "lucide-react";
+import { PROJECTS, type Project } from "@/data/agencyData";
+import { SectionHeader } from "@/components/sections/home/primitives";
 
-const gridVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 },
-  },
-};
+const FILTERS = [
+  "All",
+  "Hospitality",
+  "Food & Beverage",
+  "Retail",
+  "Fintech",
+  "Healthcare",
+  "Automotive",
+] as const;
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.6, ease: "easeOut" as const },
-  },
-};
+type Filter = (typeof FILTERS)[number];
+
+function getFilter(industry: string): Exclude<Filter, "All"> {
+  if (industry.includes("HOSPITALITY")) return "Hospitality";
+  if (industry.includes("FOOD")) return "Food & Beverage";
+  if (industry.includes("RETAIL")) return "Retail";
+  if (industry.includes("FINANCIAL")) return "Fintech";
+  if (industry.includes("HEALTHCARE")) return "Healthcare";
+  return "Automotive";
+}
+
+function ProjectCard({
+  project,
+  featured = false,
+}: {
+  project: Project;
+  featured?: boolean;
+}) {
+  const href = project.liveUrl ?? "#contact";
+  const isExternal = project.liveUrl?.startsWith("http") ?? false;
+  const headlineResult = project.results[0];
+  const secondaryResult = project.results[1];
+
+  return (
+    <article className="group h-full">
+      <Link
+        href={href}
+        aria-label={`${project.liveUrl ? "View case study" : "Discuss this project"}: ${project.client}`}
+        className="home-card relative flex h-full min-h-[430px] flex-col overflow-hidden border-zinc-200 bg-white text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A29F] focus-visible:ring-offset-4"
+        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      >
+        <div
+          className={`relative overflow-hidden bg-zinc-100 ${
+            featured ? "aspect-[16/9]" : "aspect-[16/10]"
+          }`}
+        >
+          <Image
+            src={project.image}
+            alt={`${project.client} project`}
+            fill
+            sizes={
+              featured
+                ? "(max-width: 768px) 100vw, 50vw"
+                : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            }
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent" />
+          <div className="absolute inset-x-4 top-4 flex items-start justify-between gap-3">
+            <span className="rounded-full border border-white/30 bg-zinc-950/55 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur">
+              {project.number} / {project.year}
+            </span>
+            <span className="rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-zinc-900">
+              {project.industry}
+            </span>
+          </div>
+          <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 text-white">
+            <div className="min-w-0">
+              <p className="text-xs font-bold uppercase tracking-[0.15em] text-white/75">
+                {project.client}
+              </p>
+              {headlineResult && (
+                <p
+                  className={`mt-2 max-w-[22ch] font-outfit font-black leading-[1.02] tracking-tight ${
+                    featured ? "text-2xl sm:text-4xl" : "text-xl sm:text-2xl"
+                  }`}
+                >
+                  {headlineResult}
+                </p>
+              )}
+            </div>
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/50 bg-white/10 transition-all duration-300 group-hover:rotate-45 group-hover:bg-[#00A29F] group-hover:text-white">
+              <ArrowUpRight aria-hidden="true" className="h-5 w-5" />
+            </span>
+          </div>
+        </div>
+
+        <div className="flex flex-1 flex-col p-5 sm:p-6">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#006766]">
+            {project.category}
+          </p>
+          <h3 className="mt-2 text-lg font-black uppercase leading-tight tracking-tight text-zinc-950 sm:text-xl">
+            {project.title}
+          </h3>
+          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-zinc-700">
+            {project.description}
+          </p>
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 pt-4">
+            {secondaryResult && (
+              <span className="max-w-[28ch] text-xs font-semibold text-zinc-700">
+                {secondaryResult}
+              </span>
+            )}
+            <span className="inline-flex min-h-10 items-center gap-2 rounded-full bg-zinc-950 px-4 py-2 text-[10px] font-extrabold uppercase tracking-wider text-white transition-colors group-hover:bg-[#006766]">
+              {project.liveUrl ? "View case study" : "Discuss this project"}
+              <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
+            </span>
+          </div>
+        </div>
+      </Link>
+    </article>
+  );
+}
 
 export const GSAPScrollGallery = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Scroll reveal animation for cards (GSAP loaded on demand)
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    let cancelled = false;
-    let ctx: { revert: () => void } | undefined;
-
-    (async () => {
-      const { gsap } = await loadGsap();
-      if (cancelled || !containerRef.current) return;
-
-      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      ctx = gsap.context(() => {
-        const cards = gsap.utils.toArray<HTMLElement>(
-          container.querySelectorAll(".case-study-card")
-        );
-
-        if (cards.length === 0) return;
-
-        if (prefersReduced) {
-          cards.forEach((card) => gsap.set(card, { autoAlpha: 1, y: 0, scale: 1 }));
-          return;
-        }
-
-        cards.forEach((card) => {
-          gsap.fromTo(
-            card,
-            { autoAlpha: 0, y: 50, scale: 0.95 },
-            {
-              autoAlpha: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.8,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: card,
-                start: "top 85%",
-                toggleActions: "play none none none",
-              },
-            }
-          );
-        });
-      }, containerRef);
-    })();
-
-    return () => {
-      cancelled = true;
-      ctx?.revert();
-    };
-  }, []);
+  const [activeFilter, setActiveFilter] = useState<Filter>("All");
+  const projects =
+    activeFilter === "All"
+      ? PROJECTS
+      : PROJECTS.filter((project) => getFilter(project.industry) === activeFilter);
+  const featured = activeFilter === "All" ? projects.slice(0, 2) : [];
+  const remaining = featured.length ? projects.slice(2) : projects;
 
   return (
     <section
-      ref={containerRef}
       id="work"
-      className="relative bg-white text-zinc-900 overflow-hidden py-10 sm:py-16 lg:py-24 selection:bg-zinc-900 selection:text-white font-outfit border-t border-zinc-200"
+      className="home-section border-t border-zinc-200 bg-white px-4 text-zinc-900 sm:px-8 lg:px-12"
     >
-      <div className="max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-12">
-        {/* Header Bar without filter buttons */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-200 pb-4 sm:pb-6 gap-3 z-10">
-          <div>
-            <span className="text-[10px] sm:text-xs font-outfit font-extrabold text-zinc-900 uppercase tracking-wider flex items-center gap-2">
-              <Layers className="w-4 h-4 text-emerald-600 animate-pulse" />
-              FEATURED CASE STUDIES
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-outfit font-black text-zinc-950 uppercase tracking-tight mt-1">
-              PROVEN RESULTS & BRAND ARCHIVES
-            </h2>
-          </div>
-          <span className="text-xs font-mono text-zinc-500 font-bold uppercase tracking-wider">
-            {PROJECTS.length} SELECTED WORKS
-          </span>
+      <div className="home-container">
+        <SectionHeader
+          eyebrow={<><Briefcase aria-hidden="true" className="h-3.5 w-3.5" /> Featured case studies</>}
+          index="04"
+          title={<>Proven results &amp; <span className="text-[#00A29F]">brand archives.</span></>}
+          aside={<span>{projects.length} selected works</span>}
+        />
+
+        <div
+          role="group"
+          aria-label="Filter case studies by industry"
+          className="mb-8 flex gap-2 overflow-x-auto pb-2 scrollbar-hide"
+        >
+          {FILTERS.map((filter) => (
+            <button
+              key={filter}
+              type="button"
+              aria-pressed={activeFilter === filter}
+              onClick={() => setActiveFilter(filter)}
+              className={`min-h-11 shrink-0 rounded-full border px-4 py-2 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A29F] focus-visible:ring-offset-2 ${
+                activeFilter === filter
+                  ? "border-zinc-950 bg-zinc-950 text-white"
+                  : "border-zinc-300 bg-white text-zinc-700 hover:border-[#00A29F] hover:text-[#006766]"
+              }`}
+            >
+              {filter}
+            </button>
+          ))}
         </div>
 
-        {/* Case Studies Grid - 3 items per row on large screens */}
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mt-8 lg:mt-12 items-stretch"
-          variants={gridVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {PROJECTS.map((project) => (
-            <motion.article
-              key={project.id}
-              className="case-study-card group relative overflow-hidden rounded-2xl lg:rounded-3xl bg-white border-2 border-zinc-200 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all duration-500 flex flex-col h-full"
-              variants={cardVariants}
-              style={{ willChange: "transform, opacity" }}
-            >
-              {/* Image */}
-              <Link
-                href={project.liveUrl}
-                className="relative aspect-[16/10] overflow-hidden block flex-shrink-0"
-                {...(project.liveUrl.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              >
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-zinc-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                {/* Category Badge */}
-                <div className="absolute top-3 sm:top-4 left-3 sm:left-4 right-3 sm:right-4 flex items-center justify-between gap-1.5 z-10">
-                  <span className="text-[9px] sm:text-[10px] font-outfit font-extrabold text-emerald-300 drop-shadow-[0_1px_6px_rgba(0,0,0,0.65)] flex items-center gap-1 flex-shrink-0 whitespace-nowrap">
-                    <BarChart2 className="w-2.5 h-2.5 flex-shrink-0" />
-                    PROJECT {project.number}
-                    <span className="hidden md:inline">• {project.year}</span>
-                  </span>
-                  <span className="text-[8.5px] sm:text-[9.5px] font-outfit text-white/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.65)] uppercase tracking-wide font-extrabold flex-shrink-0 whitespace-nowrap">
-                    {project.industry}
-                  </span>
-                </div>
-
-                {/* Results */}
-                <div className="absolute bottom-4 left-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-2 group-hover:translate-y-0">
-                  <div className="flex flex-wrap gap-2">
-                    {project.results?.slice(0, 2).map((res, i) => (
-                      <div
-                        key={i}
-                        className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-outfit text-white bg-emerald-600/90 backdrop-blur-md px-2.5 py-1 rounded-xl border border-emerald-500 font-extrabold"
-                      >
-                        <TrendingUp className="w-3 h-3 text-white" />
-                        <span>{res}</span>
-                      </div>
-                    ))}
-                    {(project.results?.length ?? 0) > 2 && (
-                      <span className="text-[10px] sm:text-xs font-outfit text-white/80 bg-zinc-950/80 backdrop-blur-md px-2.5 py-1 rounded-xl border border-zinc-700">
-                        +{(project.results?.length ?? 0) - 2} more
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-
-              {/* Content - flex-1 with mt-auto on CTA so all buttons in the row align on the exact same baseline */}
-              <div className="p-5 sm:p-6 flex flex-col flex-1">
-                <Link
-                  href={project.liveUrl}
-                  className="block group/title"
-                  {...(project.liveUrl.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                >
-                  <p className="text-lg sm:text-xl lg:text-2xl font-outfit font-black text-zinc-950 group-hover/title:text-emerald-600 transition-colors duration-300 uppercase tracking-tight leading-[1.15] min-h-[3.2rem] line-clamp-2">
-                    {project.title}
-                  </p>
-                </Link>
-
-                <p className="text-sm text-zinc-700 font-normal leading-relaxed line-clamp-3 mt-3 mb-4">
-                  {project.description}
-                </p>
-
-                {/* Services Tags */}
-                <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4">
-                  {project.services.slice(0, 4).map((service, i) => (
-                    <span
-                      key={i}
-                      className="text-[10px] sm:text-xs font-outfit font-bold tracking-wider px-3 py-1 rounded-full border border-zinc-200 bg-zinc-50 text-zinc-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
-                    >
-                      {service}
-                    </span>
-                  ))}
-                  {project.services.length > 4 && (
-                    <span className="text-[10px] sm:text-xs font-outfit font-bold tracking-wider px-3 py-1 rounded-full border border-zinc-200 bg-zinc-50 text-zinc-500">
-                      +{project.services.length - 4}
-                    </span>
-                  )}
-                </div>
-
-                {/* CTA - pinned to bottom via mt-auto, guaranteeing 1-row alignment across all 3 cards in the grid row */}
-                <div className="mt-auto pt-4 border-t border-zinc-100 flex items-center">
-                  <Magnetic strength={0.3}>
-                    <Link
-                      href={project.liveUrl}
-                      className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-extrabold font-outfit tracking-widest text-emerald-600 group-hover:translate-x-2 transition-transform duration-300 text-white"
-                      {...(project.liveUrl.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    >
-                      <span className="px-4 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-md flex items-center gap-2 whitespace-nowrap" data-cursor-pointer>
-                        VIEW CASE STUDY
-                        <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </span>
-                    </Link>
-                  </Magnetic>
-                </div>
-              </div>
-            </motion.article>
-          ))}
-        </motion.div>
+        {featured.length > 0 && (
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-7">
+            {featured.map((project) => (
+              <ProjectCard key={project.id} project={project} featured />
+            ))}
+          </div>
+        )}
+        {remaining.length > 0 && (
+          <div
+            className={`grid grid-cols-1 gap-5 sm:grid-cols-2 lg:gap-6 ${
+              featured.length ? "mt-6 lg:grid-cols-4" : "lg:grid-cols-3"
+            }`}
+          >
+            {remaining.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
