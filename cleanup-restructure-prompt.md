@@ -47,7 +47,7 @@ Build a real dependency graph, not a guess:
 
 ## 4. Root and scripts cleanup
 
-- Move documentation into `docs/`: `seo.md`, `Report.md`, `PERFORMANCE_OPTIMIZATION_LOG.md`, `design.md`, `WEBSITE_DOCUMENTATION.txt`, `portfolio.txt` (use `git mv`). Keep `README.md`, `AGENTS.md`, `CLAUDE.md` in root. If `CLAUDE.md`/`AGENTS.md` reference moved files, update the paths.
+- Move documentation into `docs/`: `docs/seo.md`, `docs/Report.md`, `docs/PERFORMANCE_OPTIMIZATION_LOG.md`, `docs/design.md`, `docs/WEBSITE_DOCUMENTATION.txt`, `docs/portfolio.txt` (use `git mv`). Keep `README.md`, `AGENTS.md`, `CLAUDE.md` in root. If `CLAUDE.md`/`AGENTS.md` reference moved files, update the paths.
 - `urdu.html`: check if anything references it; if not, quarantine it.
 - `swarm/docker-stack.yml`: keep unless nothing references Docker/Swarm in README, CI, or package scripts; if unused, list under "Needs owner decision" (do not delete).
 - `scripts/`: keep `daily-supabase-task.js` (CI) and `cdp-client.js` if referenced. For `fix-logos.js`, `strip-logo-backgrounds.js`, `verify-logos.js`, `optimize-public-assets.js`: keep only if referenced in `package.json` scripts or docs; one-off migration scripts that nothing references go to quarantine. Add a short `scripts/README.md` for what remains.
