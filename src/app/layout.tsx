@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Roboto_Flex, Lora } from "next/font/google";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 import "./globals.css";
 
 // Roboto Flex (variable font) for modern punchy headlines, UI, navigation, and body copy
@@ -342,6 +343,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-roboto relative" suppressHydrationWarning>
         {children}
+        <ChatWidget />
       </body>
     </html>
   );
