@@ -119,6 +119,20 @@ npm run lint
 
 ---
 
+## 💬 Website Chat Assistant
+
+The site-wide Virtual Velocity chat assistant is deterministic and rule-based. It does not call an LLM, send chat messages to a server, or require an API key. Visitors can use the contact page or the published email and phone links to reach the team.
+
+To update the assistant:
+
+* Edit the verified services, contact details, locations, process notes, and case studies in `src/data/chatKnowledge.ts`.
+* Update intent matching and fixed English/Urdu replies in `src/lib/chat/reply.ts`.
+* The conversation is kept in the current browser tab's `sessionStorage`; feedback stores only aggregate counts in `localStorage`.
+
+Chat leads are not collected or submitted in the widget. The contact page currently has no configured submission endpoint, so the assistant links visitors to `/contact` rather than claiming that a chat lead was delivered.
+
+---
+
 ## 📂 Project Structure
 
 ```text
