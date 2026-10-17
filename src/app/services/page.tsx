@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
+import { BreadcrumbJsonLd } from "@/components/seo/BreadcrumbJsonLd";
 import { ServicesClient } from "./ServicesClient";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.thevirtualvelocity.com"),
   alternates: {
-    canonical: "https://www.thevirtualvelocity.com/services",
+    canonical: `${SITE_URL}/services`,
   },
-  title: "Digital Marketing Services, BPO, Hotel & Restaurant Marketing",
+  title: "Digital Marketing & BPO Services",
   description:
-    "Explore Virtual Velocity's digital marketing, BPO services, hotel & restaurant marketing, Meta Ads, and Google Ads in Islamabad & worldwide.",
+    "Explore Virtual Velocity's digital marketing, BPO, hospitality, branding, SEO, Meta Ads, and Google Ads services, with descriptions and deliverables.",
   keywords: [
     "Digital Marketing Agency",
     "Digital Marketing Company",
@@ -44,10 +45,18 @@ export const metadata: Metadata = {
     "Lead Generation Agency",
   ],
   openGraph: {
+    url: `${SITE_URL}/services`,
     title: "Digital Marketing Services, BPO & Performance Agency | Virtual Velocity",
     description:
-      "Comprehensive Digital Marketing Services, BPO Services Pakistan, Hotel Marketing Agency growth, Restaurant Lead Generation, and high-ROAS Performance Marketing.",
-    url: "https://www.thevirtualvelocity.com/services",
+      "Explore Virtual Velocity's digital marketing, BPO, hospitality, branding, SEO, Meta Ads, and Google Ads services, with descriptions and deliverables.",
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "Virtual Velocity services" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Digital Marketing & BPO Services | Virtual Velocity",
+    description:
+      "Explore Virtual Velocity's digital marketing, BPO, hospitality, branding, SEO, Meta Ads, and Google Ads services, with descriptions and deliverables.",
+    images: [{ url: SOCIAL_IMAGE, alt: "Virtual Velocity services" }],
   },
 };
 
@@ -94,6 +103,12 @@ const servicesJsonLd = {
 export default function ServicesPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+        ]}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesJsonLd) }}
