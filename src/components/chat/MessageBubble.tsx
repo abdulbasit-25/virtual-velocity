@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, Copy, ThumbsDown, ThumbsUp } from "lucide-react";
 import type { ChatMessage } from "@/components/chat/useChat";
 
@@ -24,6 +24,9 @@ function recordFeedback(feedback: Feedback) {
   }
 }
 
+const iconButton =
+  "flex h-7 w-7 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white hover:text-zinc-800 hover:shadow-sm disabled:cursor-default disabled:hover:bg-transparent disabled:hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006766]";
+
 export function MessageBubble({
   message,
   onHandoff,
@@ -33,13 +36,17 @@ export function MessageBubble({
 }) {
   const [copied, setCopied] = useState(false);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const copyTimer = useRef<number>();
   const isAssistant = message.role === "assistant";
+
+  useEffect(() => () => window.clearTimeout(copyTimer.current), []);
 
   const copyMessage = async () => {
     try {
       await navigator.clipboard.writeText(message.content);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 1600);
+      window.clearTimeout(copyTimer.current);
+      copyTimer.current = window.setTimeout(() => setCopied(false), 1600);
     } catch {
       setCopied(false);
     }
@@ -52,20 +59,33 @@ export function MessageBubble({
   };
 
   return (
-    <article className={`flex ${isAssistant ? "justify-start" : "justify-end"}`}>
-      <div className={`max-w-[88%] ${isAssistant ? "items-start" : "items-end"} flex flex-col`}>
+    <article
+      className={`vv-msg flex items-end gap-2 ${
+        isAssistant ? "justify-start" : "justify-end"
+      }`}
+    >
+      {isAssistant && (
+        <span
+          aria-hidden="true"
+          className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#007c7a] to-[#004f4e] text-[9px] font-black tracking-wider text-white shadow-sm"
+        >
+          VV
+        </span>
+      )}
+
+      <div
+        className={`flex min-w-0 max-w-[84%] flex-col ${
+          isAssistant ? "items-start" : "items-end"
+        }`}
+      >
         <div
-          className={`whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+          className={`whitespace-pre-wrap break-words px-4 py-2.5 text-sm leading-relaxed ${
             isAssistant
-              ? "rounded-bl-md bg-white text-zinc-800 shadow-sm"
-              : "rounded-br-md bg-[#006766] text-white"
+              ? "rounded-2xl rounded-bl-md border border-zinc-200/70 bg-white text-zinc-800 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+              : "rounded-2xl rounded-br-md bg-gradient-to-br from-[#007c7a] to-[#005a59] text-white shadow-[0_4px_12px_-4px_rgba(0,80,78,0.45)]"
           }`}
         >
-          {isAssistant && (
-            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-800">
-              VV assistant
-            </span>
-          )}
+          {isAssistant && <span className="sr-only">Assistant: </span>}
           {message.content}
         </div>
 
@@ -78,11 +98,14 @@ export function MessageBubble({
                 target={action.external ? "_blank" : undefined}
                 rel={action.external ? "noopener noreferrer" : undefined}
                 onClick={() => {
-                  if (action.href.startsWith("mailto:") || action.href.startsWith("tel:")) {
+                  if (
+                    action.href.startsWith("mailto:") ||
+                    action.href.startsWith("tel:")
+                  ) {
                     onHandoff();
                   }
                 }}
-                className="rounded-full border border-emerald-800/25 bg-white px-3 py-1.5 text-xs font-bold text-emerald-900 underline-offset-2 hover:bg-emerald-50 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800"
+                className="rounded-full border border-[#006766]/25 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#006766] shadow-sm transition-all hover:border-[#006766] hover:bg-[#006766] hover:text-white active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006766] focus-visible:ring-offset-1"
               >
                 {action.label}
               </a>
@@ -91,25 +114,43 @@ export function MessageBubble({
         ) : null}
 
         {isAssistant && message.id !== "greeting" ? (
-          <div className="mt-2 flex items-center gap-1 text-zinc-500">
+          <div className="mt-1.5 flex items-center gap-0.5 text-zinc-500">
             <button
               type="button"
               onClick={copyMessage}
               aria-label={copied ? "Copied reply" : "Copy reply"}
-              className="rounded-md p-1.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800"
+              title={copied ? "Copied" : "Copy reply"}
+              className={iconButton}
             >
-              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? (
+                <Check className="h-3.5 w-3.5 text-emerald-700" />
+              ) : (
+                <Copy className="h-3.5 w-3.5" />
+              )}
             </button>
-            <span className="mx-1 text-[11px]">Was this helpful?</span>
+            <span className="mx-1.5 h-3 w-px bg-zinc-300" aria-hidden="true" />
+            {feedback ? (
+              <span className="px-1 text-[11px] font-medium text-[#006766]">
+                Thanks for your feedback
+              </span>
+            ) : (
+              <span className="px-1 text-[11px]">Was this helpful?</span>
+            )}
             <button
               type="button"
               onClick={() => submitFeedback("helpful")}
               aria-label="Yes, this was helpful"
               aria-pressed={feedback === "helpful"}
               disabled={feedback !== null}
-              className="rounded-md p-1.5 hover:bg-white disabled:cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800"
+              className={`${iconButton} ${
+                feedback === "helpful" ? "!text-[#006766]" : ""
+              } ${feedback === "not-helpful" ? "opacity-40" : ""}`}
             >
-              <ThumbsUp className={`h-3.5 w-3.5 ${feedback === "helpful" ? "text-emerald-800" : ""}`} />
+              <ThumbsUp
+                className={`h-3.5 w-3.5 ${
+                  feedback === "helpful" ? "fill-[#006766]/20" : ""
+                }`}
+              />
             </button>
             <button
               type="button"
@@ -117,11 +158,19 @@ export function MessageBubble({
               aria-label="No, this was not helpful"
               aria-pressed={feedback === "not-helpful"}
               disabled={feedback !== null}
-              className="rounded-md p-1.5 hover:bg-white disabled:cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800"
+              className={`${iconButton} ${
+                feedback === "not-helpful" ? "!text-[#006766]" : ""
+              } ${feedback === "helpful" ? "opacity-40" : ""}`}
             >
-              <ThumbsDown className={`h-3.5 w-3.5 ${feedback === "not-helpful" ? "text-emerald-800" : ""}`} />
+              <ThumbsDown
+                className={`h-3.5 w-3.5 ${
+                  feedback === "not-helpful" ? "fill-[#006766]/20" : ""
+                }`}
+              />
             </button>
-            {feedback && <span className="sr-only">Thanks for your feedback.</span>}
+            <span className="sr-only" role="status">
+              {feedback ? "Thanks for your feedback." : ""}
+            </span>
           </div>
         ) : null}
       </div>
