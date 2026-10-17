@@ -26,7 +26,8 @@ export function SaltLineClient() {
       <Navigation />
 
       {/* Main container joining all Salt Line images end-to-end from top to bottom (like Branding page) */}
-      <main className="w-full bg-[#0a0a0a] m-0 p-0 overflow-x-hidden">
+      <main id="main-content" tabIndex={-1} className="w-full bg-[#0a0a0a] m-0 p-0 overflow-x-hidden">
+        <h1 className="sr-only">The Salt Line Case Study</h1>
         <section className="w-full m-0 p-0 flex flex-col">
 
           {/* 1st Image: Covers the header and overlays 2nd image with rounded bottom edges */}
