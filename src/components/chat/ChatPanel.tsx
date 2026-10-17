@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowUp,
-  Minus,
   RotateCcw,
   ShieldCheck,
   Square,
@@ -35,13 +34,24 @@ export function ChatPanel({
   }, []);
 
   useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
+
+  useEffect(() => {
     const log = logRef.current;
     if (log) log.scrollTop = log.scrollHeight;
   }, [messages, isThinking]);
 
   const send = useCallback(
     (text = draft) => {
-      if (sendMessage(text)) setDraft("");
+      if (sendMessage(text)) {
+        setDraft("");
+        if (inputRef.current) inputRef.current.style.height = "auto";
+      }
     },
     [draft, sendMessage],
   );
@@ -64,7 +74,10 @@ export function ChatPanel({
 
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
+      if (!dialogRef.current.contains(document.activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
       } else if (!event.shiftKey && document.activeElement === last) {
@@ -87,19 +100,18 @@ export function ChatPanel({
   };
 
   return (
-    <div className="fixed inset-0 z-[55] bg-zinc-950/25 md:bg-transparent">
-      <button
-        type="button"
-        aria-label="Close chat"
+    <div className="fixed inset-0 z-[55] bg-zinc-950/30 backdrop-blur-[2px] sm:bg-transparent sm:backdrop-blur-0">
+      <div
+        aria-hidden="true"
         onClick={onClose}
-        className="absolute inset-0 h-full w-full cursor-default md:cursor-default"
+        className="absolute inset-0"
       />
       <section
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="vv-chat-title"
-        className="fixed inset-x-0 bottom-0 z-[56] flex h-[100dvh] max-h-[100dvh] flex-col overflow-hidden border border-zinc-200 bg-[#f7faf9] pb-[env(safe-area-inset-bottom)] shadow-2xl md:inset-x-auto md:bottom-24 md:right-6 md:h-[min(600px,calc(100dvh-7rem))] md:w-[380px] md:rounded-3xl"
+        className="fixed inset-x-0 top-0 bottom-auto z-[56] flex h-dvh min-h-0 flex-col overflow-hidden border-0 border-zinc-200 bg-[#f7faf9] pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] shadow-2xl sm:inset-x-auto sm:top-auto sm:bottom-20 sm:right-4 sm:h-[min(600px,calc(100dvh-6rem))] sm:w-[min(380px,calc(100vw-2rem))] sm:rounded-3xl sm:border sm:pb-0 sm:pt-0 md:right-6"
       >
         <header className="flex shrink-0 items-center justify-between gap-3 bg-[#006766] px-4 py-4 text-white sm:px-5">
           <div className="flex min-w-0 items-center gap-3">
@@ -129,11 +141,11 @@ export function ChatPanel({
             <button
               type="button"
               onClick={onClose}
-              aria-label="Minimize chat"
-              title="Minimize"
+              aria-label="Close chat"
+              title="Close chat"
               className="rounded-lg p-2 text-white/90 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
-              <Minus className="h-4 w-4" />
+              <X className="h-4 w-4" />
             </button>
           </div>
         </header>
@@ -141,9 +153,10 @@ export function ChatPanel({
         <div
           ref={logRef}
           role="log"
+          aria-label="Conversation"
           aria-live="polite"
           aria-relevant="additions text"
-          className="flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-5 sm:px-5"
+          className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-5 sm:px-5"
         >
           {messages.map((message) => (
             <MessageBubble
@@ -216,14 +229,6 @@ export function ChatPanel({
             </span>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close chat window"
-          className="absolute right-3 top-3 hidden rounded-md p-1 text-white/80 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-        >
-          <X className="h-4 w-4" />
-        </button>
       </section>
     </div>
   );
