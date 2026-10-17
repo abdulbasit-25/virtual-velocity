@@ -574,7 +574,7 @@ export function OwnedMediaClient() {
 
   return (
     <SmoothScrollProvider>
-      <main className="relative min-h-screen bg-white font-outfit text-zinc-900 selection:bg-zinc-900 selection:text-white">
+      <main id="main-content" tabIndex={-1} className="relative min-h-screen bg-white font-outfit text-zinc-900 selection:bg-zinc-900 selection:text-white">
         <CustomCursor />
         <Navigation />
 
