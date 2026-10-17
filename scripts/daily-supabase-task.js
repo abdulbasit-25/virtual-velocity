@@ -1,17 +1,21 @@
 const { createClient } = require("@supabase/supabase-js");
 
 const supabaseUrl =
-  process.env.SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  "https://xyzcompany.supabase.co";
+  process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 
 const supabaseKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.SUPABASE_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummykey";
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 async function fetchData() {
+  if (!supabaseUrl || !supabaseKey) {
+    console.error(
+      "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY before running this script.",
+    );
+    process.exitCode = 1;
+    return;
+  }
+
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   console.log("Fetching data from Supabase...");
@@ -19,11 +23,14 @@ async function fetchData() {
 
   if (error) {
     console.error("Error fetching data:", error.message);
-    process.exit(1);
+    process.exitCode = 1;
+    return;
   }
 
-  console.log("Data from Supabase:", data);
+  console.log(`Fetched ${data?.length ?? 0} review records.`);
 }
 
-fetchData();
-
+fetchData().catch((error) => {
+  console.error("Supabase review task failed:", error);
+  process.exitCode = 1;
+});
