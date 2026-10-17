@@ -680,7 +680,7 @@ export const Footer = () => {
             animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-[max(1rem,env(safe-area-inset-left))] z-40 sm:bottom-6 sm:left-6"
+            className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-[max(1rem,env(safe-area-inset-left))] z-[100] sm:bottom-6 sm:left-6"
           >
             <Tooltip label="Back to top" side="left">
               <button
