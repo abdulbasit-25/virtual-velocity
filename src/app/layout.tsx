@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Roboto_Flex, Lora } from "next/font/google";
 import { ChatWidget } from "@/components/chat/ChatWidget";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
 import "./globals.css";
 
 // Roboto Flex (variable font) for modern punchy headlines, UI, navigation, and body copy
@@ -25,13 +26,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.thevirtualvelocity.com"),
+  metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: "https://www.thevirtualvelocity.com",
+    canonical: SITE_URL,
   },
   title: {
     default: "Virtual Velocity | Digital Marketing & BPO Agency",
-    template: "%s | Virtual Velocity Agency",
+    template: "%s | Virtual Velocity",
   },
   description:
     "Virtual Velocity is Pakistan's premier Digital Marketing Agency & BPO service provider in Islamabad. Expert Meta Ads, Google Ads, SEO & BPO solutions.",
@@ -83,7 +84,7 @@ export const metadata: Metadata = {
     "Virtual Velocity Agency",
     "Tauseef Alam Founder Virtual Velocity"
   ],
-  authors: [{ name: "Tauseef Alam & Virtual Velocity Team", url: "https://thevirtualvelocity.com" }],
+  authors: [{ name: "Tauseef Alam & Virtual Velocity Team", url: SITE_URL }],
   creator: "Virtual Velocity",
   publisher: "Virtual Velocity",
   formatDetection: {
@@ -95,11 +96,11 @@ export const metadata: Metadata = {
     title: "Virtual Velocity | Top Digital Marketing & BPO Agency Islamabad Pakistan",
     description:
       "Scale your business revenue with top-rated Digital Marketing Services, BPO Services Pakistan, Hotel Marketing Agency campaigns, Restaurant SEO, Meta Ads Agency, and Google Ads Agency solutions.",
-    url: "https://thevirtualvelocity.com",
+    url: SITE_URL,
     siteName: "Virtual Velocity Digital Agency Pakistan",
     images: [
       {
-        url: "/VV png.png",
+        url: SOCIAL_IMAGE,
         width: 1200,
         height: 630,
         alt: "Virtual Velocity Digital Marketing Agency Pakistan",
@@ -113,7 +114,7 @@ export const metadata: Metadata = {
     title: "Virtual Velocity | Digital Marketing & Performance Agency Pakistan",
     description:
       "Pakistan's premier Digital Marketing Agency, BPO Services Provider, Hospitality & Restaurant Marketing Specialist, and Performance Marketing Agency.",
-    images: ["/VV png.png"],
+    images: [{ url: SOCIAL_IMAGE, alt: "Virtual Velocity Digital Marketing Agency Pakistan" }],
     creator: "@virtualvelocity",
   },
   robots: {
@@ -129,11 +130,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icon.png" },
-      { url: "/VV png.png", type: "image/png" },
+      { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
     ],
-    shortcut: "/icon.png",
-    apple: "/apple-icon.png",
+    shortcut: "/icon-512.png",
+    apple: "/icon-512.png",
   },
   manifest: "/site.webmanifest",
 };
@@ -142,8 +142,16 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      "url": SITE_URL,
+      "name": "Virtual Velocity",
+      "publisher": { "@id": `${SITE_URL}/#organization` },
+      "inLanguage": "en",
+    },
+    {
       "@type": "Organization",
-      "@id": "https://thevirtualvelocity.com/#organization",
+      "@id": `${SITE_URL}/#organization`,
       "name": "Virtual Velocity",
       "founder": {
         "@type": "Person",
@@ -153,8 +161,8 @@ const jsonLd = {
           "https://www.linkedin.com/in/tauseefalam/"
         ]
       },
-      "url": "https://thevirtualvelocity.com",
-      "logo": "https://thevirtualvelocity.com/VV%20png.png",
+      "url": SITE_URL,
+      "logo": `${SITE_URL}/VV%20png.png`,
       "sameAs": [
         "https://www.linkedin.com/company/virtualvelocitypk/",
         "https://www.facebook.com/virtualvelocitypk/",
@@ -196,10 +204,10 @@ const jsonLd = {
     },
     {
       "@type": "ProfessionalService",
-      "@id": "https://thevirtualvelocity.com/#service",
+      "@id": `${SITE_URL}/#service`,
       "name": "Virtual Velocity Digital Marketing & BPO Agency Pakistan",
-      "url": "https://thevirtualvelocity.com",
-      "image": "https://thevirtualvelocity.com/VV%20png.png",
+      "url": SITE_URL,
+      "image": `${SITE_URL}${SOCIAL_IMAGE}`,
       "priceRange": "$$$",
       "founder": {
         "@type": "Person",
@@ -277,7 +285,7 @@ const jsonLd = {
     },
     {
       "@type": "FAQPage",
-      "@id": "https://thevirtualvelocity.com/#faq",
+      "@id": `${SITE_URL}/#faq`,
       "mainEntity": [
         {
           "@type": "Question",
@@ -342,6 +350,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-roboto relative" suppressHydrationWarning>
+        <a
+          href="#main-content"
+          className="fixed left-4 top-4 z-[100] -translate-y-[150%] rounded-lg bg-zinc-900 px-4 py-3 text-sm font-bold text-white transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-[#00A29F] focus:ring-offset-2 motion-reduce:transition-none"
+        >
+          Skip to main content
+        </a>
         {children}
         <ChatWidget />
       </body>
