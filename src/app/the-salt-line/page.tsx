@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
+import { BreadcrumbJsonLd } from "@/components/seo/BreadcrumbJsonLd";
 import { SaltLineClient } from "./SaltLineClient";
 
 export const metadata: Metadata = {
-  title: "The Salt Line Hospitality & Organic Growth Case Study | Virtual Velocity",
+  alternates: { canonical: `${SITE_URL}/the-salt-line` },
+  title: "The Salt Line Case Study",
   description:
-    "Discover how Virtual Velocity took The Salt Line from 0 digital presence to 1.3M+ organic reach, 9,300+ followers, and sold-out weekend Qawwali nights in F9 Park Islamabad with $0 paid ad spend.",
+    "See how Virtual Velocity approached organic content and event marketing for The Salt Line, a restaurant case study in Islamabad. Review the campaign story.",
   keywords: [
     "Hospitality Marketing Agency",
     "Hotel Marketing Agency",
@@ -22,19 +25,12 @@ export const metadata: Metadata = {
     "Virtual Velocity Case Studies",
   ],
   openGraph: {
+    url: `${SITE_URL}/the-salt-line`,
     title: "The Salt Line — Organic Growth & Community Case Study | Virtual Velocity",
     description:
-      "Good food. Great music. Real people. How storytelling turned weekend Qawwali nights into a sold-out culinary and cultural destination in Islamabad.",
-    url: "https://www.thevirtualvelocity.com/the-salt-line",
+      "See how Virtual Velocity approached organic content and event marketing for The Salt Line, a restaurant case study in Islamabad. Review the campaign story.",
     siteName: "Virtual Velocity Digital Agency",
-    images: [
-      {
-        url: "https://res.cloudinary.com/nudghwmz/image/upload/v1790186939/1.png",
-        width: 1920,
-        height: 1080,
-        alt: "The Salt Line Case Study - Virtual Velocity",
-      },
-    ],
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "The Salt Line case study by Virtual Velocity" }],
     locale: "en_US",
     type: "article",
   },
@@ -42,11 +38,21 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The Salt Line Case Study | Virtual Velocity",
     description:
-      "1.3M+ organic reach and 0 to 9,341 followers in 3-4 months with zero ad budget.",
-    images: ["https://res.cloudinary.com/nudghwmz/image/upload/v1790186939/1.png"],
+      "See how Virtual Velocity approached organic content and event marketing for The Salt Line, a restaurant case study in Islamabad. Review the campaign story.",
+    images: [{ url: SOCIAL_IMAGE, alt: "The Salt Line case study by Virtual Velocity" }],
   },
 };
 
 export default function SaltLinePage() {
-  return <SaltLineClient />;
+  return (
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "The Salt Line", path: "/the-salt-line" },
+        ]}
+      />
+      <SaltLineClient />
+    </>
+  );
 }
