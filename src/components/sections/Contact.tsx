@@ -122,10 +122,7 @@ function HubClock({ timezone }: { timezone: string }) {
 
 type ContactProps = {
   servicesQuery?: string | null;
-  /**
-   * Where to POST the brief as JSON. If omitted, the form only shows the
-   * success screen and sends nothing (same as before).
-   */
+  /** Where to POST the brief as JSON. The form reports an error when unset. */
   endpoint?: string;
 };
 
@@ -214,20 +211,24 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
     }
     setStepError("");
 
-    // Honeypot filled → pretend success, send nothing.
+    // Do not send submissions from automated spam.
     if (formData.website) {
       setSubmitted(true);
       return;
     }
 
     if (!endpoint) {
-      setSubmitted(true);
+      setStatus("error");
+      setStepError(
+        "The form is not configured to send yet. Please use the contact links in the footer.",
+      );
       return;
     }
 
     setStatus("sending");
     try {
-      const { website: _hp, ...rest } = formData;
+      const { website: honeypot, ...rest } = formData;
+      void honeypot;
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -390,7 +391,10 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
                   autoComplete="off"
                   value={formData.website}
                   onChange={(e) =>
-                    setFormData({ ...formData, website: e.target.value })
+                    setFormData((current) => ({
+                      ...current,
+                      website: e.target.value,
+                    }))
                   }
                 />
               </div>
@@ -521,7 +525,10 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
                         placeholder="e.g. Sarah Jenkins"
                         value={formData.name}
                         onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
+                          setFormData((current) => ({
+                            ...current,
+                            name: e.target.value,
+                          }))
                         }
                         className={inputCls}
                       />
@@ -538,7 +545,10 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
                         placeholder="sarah@company.com"
                         value={formData.email}
                         onChange={(e) =>
-                          setFormData({ ...formData, email: e.target.value })
+                          setFormData((current) => ({
+                            ...current,
+                            email: e.target.value,
+                          }))
                         }
                         className={inputCls}
                       />
@@ -586,7 +596,10 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
                         placeholder="+1 (555) 000-0000"
                         value={formData.phone}
                         onChange={(e) =>
-                          setFormData({ ...formData, phone: e.target.value })
+                          setFormData((current) => ({
+                            ...current,
+                            phone: e.target.value,
+                          }))
                         }
                         className={inputCls}
                       />
@@ -602,7 +615,10 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
                         placeholder="Nexus Retail"
                         value={formData.company}
                         onChange={(e) =>
-                          setFormData({ ...formData, company: e.target.value })
+                          setFormData((current) => ({
+                            ...current,
+                            company: e.target.value,
+                          }))
                         }
                         className={inputCls}
                       />
@@ -618,10 +634,10 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
                         placeholder="VP of Marketing"
                         value={formData.designation}
                         onChange={(e) =>
-                          setFormData({
-                            ...formData,
+                          setFormData((current) => ({
+                            ...current,
                             designation: e.target.value,
-                          })
+                          }))
                         }
                         className={inputCls}
                       />
@@ -648,10 +664,10 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
                             value={b}
                             checked={formData.budget === b}
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
+                              setFormData((current) => ({
+                                ...current,
                                 budget: e.target.value,
-                              })
+                              }))
                             }
                             className="sr-only"
                           />
@@ -670,10 +686,10 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
                         id="contact-hear"
                         value={formData.hearAbout}
                         onChange={(e) =>
-                          setFormData({
-                            ...formData,
+                          setFormData((current) => ({
+                            ...current,
                             hearAbout: e.target.value,
-                          })
+                          }))
                         }
                         className="w-full appearance-none bg-white/70 border border-zinc-200/90 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 text-zinc-900 font-normal text-base sm:text-sm px-3.5 sm:px-4 py-3 sm:py-3.5 rounded-xl cursor-pointer shadow-2xs transition-all outline-none min-h-[46px]"
                       >
@@ -702,7 +718,10 @@ export const Contact = ({ endpoint, servicesQuery }: ContactProps) => {
                       placeholder="Outline your targets, monthly ad budget, website URL..."
                       value={formData.message}
                       onChange={(e) =>
-                        setFormData({ ...formData, message: e.target.value })
+                        setFormData((current) => ({
+                          ...current,
+                          message: e.target.value,
+                        }))
                       }
                       className={`${inputCls} p-3.5 sm:p-4 resize-none`}
                     />
