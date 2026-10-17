@@ -226,6 +226,7 @@ export function ChatPanel({
           aria-label="Conversation"
           aria-live="polite"
           aria-relevant="additions text"
+          data-lenis-prevent
           className="vv-log min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain bg-[radial-gradient(circle_at_top,#ffffff,transparent_60%)] px-4 py-5 sm:px-5"
         >
           {messages.map((message) => (
