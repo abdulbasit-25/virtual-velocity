@@ -133,7 +133,7 @@ export const CursorParallaxImage = ({ src, alt, className = "", disableParallax 
         <img
           src={src}
           alt={alt}
-          className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
+          className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-out"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/60 via-zinc-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </motion.div>

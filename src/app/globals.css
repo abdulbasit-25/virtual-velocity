@@ -244,9 +244,11 @@ p[class*="text-emerald-"] {
   animation-duration: 45s;
 }
 
-.hover-marquee:hover .animate-marquee-left,
-.hover-marquee:hover .animate-marquee-right {
-  animation-play-state: paused;
+@media (hover: hover) {
+  .hover-marquee:hover .animate-marquee-left,
+  .hover-marquee:hover .animate-marquee-right {
+    animation-play-state: paused;
+  }
 }
 
 /* Noise overlay effect */

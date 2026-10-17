@@ -474,7 +474,7 @@ export function ServicesClient() {
                               alt={service.title}
                               fill
                               sizes="(max-width: 1024px) 100vw, 42vw"
-                              className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                              className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-white font-mono text-xs">
@@ -616,7 +616,7 @@ export function ServicesClient() {
                     onClick={() => setActiveStep((p) => Math.max(0, p - 1))}
                     disabled={activeStep === 0}
                     aria-label="Previous stage"
-                    className="h-10 w-10 rounded-full border border-zinc-900/20 bg-white/70 flex items-center justify-center disabled:opacity-30 hover:bg-white transition"
+                    className="h-10 w-10 rounded-full border border-zinc-900/20 bg-white/70 flex items-center justify-center enabled:hover:bg-white disabled:cursor-not-allowed disabled:opacity-30 transition"
                   >
                     <ArrowRight className="w-4 h-4 rotate-180" />
                   </button>
@@ -628,7 +628,7 @@ export function ServicesClient() {
                     }
                     disabled={activeStep === PROCESS_STEPS.length - 1}
                     aria-label="Next stage"
-                    className="h-10 w-10 rounded-full border border-zinc-900/20 bg-white/70 flex items-center justify-center disabled:opacity-30 hover:bg-white transition"
+                    className="h-10 w-10 rounded-full border border-zinc-900/20 bg-white/70 flex items-center justify-center enabled:hover:bg-white disabled:cursor-not-allowed disabled:opacity-30 transition"
                   >
                     <ArrowRight className="w-4 h-4" />
                   </button>

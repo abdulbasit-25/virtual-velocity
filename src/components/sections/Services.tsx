@@ -38,31 +38,37 @@ export const Services = () => {
                 isOpen ? "bg-zinc-50/80" : "hover:bg-zinc-50/40"
               }`}
             >
-              <div
+              <button
+                type="button"
+                aria-expanded={isOpen}
                 onClick={() => setActiveService(isOpen ? null : service.number)}
-                className="py-10 sm:py-14 px-4 sm:px-8 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer"
+                className="w-full py-10 sm:py-14 px-4 sm:px-8 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00A29F] focus-visible:ring-offset-2"
                 data-cursor-pointer
               >
                 {/* Number & Title */}
-                <div className="flex items-baseline gap-6 sm:gap-12">
+                <span className="flex items-baseline gap-6 sm:gap-12">
                   <span className="text-xl sm:text-3xl font-outfit font-extrabold text-emerald-600 group-hover:translate-x-2 transition-transform duration-300">
                     {service.number}
                   </span>
-                  <h3 className="text-2xl sm:text-4xl md:text-5xl font-outfit font-extrabold text-zinc-950 group-hover:text-emerald-600 transition-colors duration-300 uppercase tracking-tight">
+                  <span
+                    role="heading"
+                    aria-level={3}
+                    className="text-2xl sm:text-4xl md:text-5xl font-outfit font-extrabold text-zinc-950 group-hover:text-emerald-600 transition-colors duration-300 uppercase tracking-tight"
+                  >
                     {service.title}
-                  </h3>
-                </div>
+                  </span>
+                </span>
 
                 {/* Right Meta Indicator */}
-                <div className="flex items-center gap-6 self-end md:self-auto">
+                <span className="flex items-center gap-6 self-end md:self-auto">
                   <span className="hidden sm:inline-block text-xs font-outfit font-bold text-zinc-700 border border-zinc-200 px-3 py-1 rounded-full uppercase bg-white">
                     {service.category}
                   </span>
-                  <div className="p-3 rounded-full border border-zinc-300 group-hover:border-emerald-600 group-hover:bg-emerald-600 group-hover:text-white text-zinc-950 transition-all duration-300 shadow-xs">
+                  <span className="p-3 rounded-full border border-zinc-300 group-hover:border-emerald-600 group-hover:bg-emerald-600 group-hover:text-white text-zinc-950 transition-all duration-300 shadow-xs">
                     {isOpen ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-                  </div>
-                </div>
-              </div>
+                  </span>
+                </span>
+              </button>
 
               {/* Accordion Expansion */}
               <AnimatePresence>

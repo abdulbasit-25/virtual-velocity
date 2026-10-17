@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
 
@@ -126,11 +126,12 @@ function useResponsiveRadii() {
 // ── Logo card: pops up (scale + lift + glow) when hovered ──
 function LogoCard({ logo, cardSize, isMobile = false }: { logo: LogoAsset; cardSize: number; isMobile?: boolean }) {
   const [hovering, setHovering] = useState(false);
+  const reduceMotion = useReducedMotion();
   return (
     <motion.div
       onHoverStart={() => !isMobile && setHovering(true)}
       onHoverEnd={() => setHovering(false)}
-      whileHover={isMobile ? undefined : { scale: 1.12, y: -4 }}
+      whileHover={isMobile || reduceMotion ? undefined : { scale: 1.12, y: -4 }}
       transition={{ type: "spring", stiffness: 320, damping: 18 }}
       style={{ width: cardSize, height: cardSize, zIndex: hovering ? 40 : "auto" }}
       className="pointer-events-auto flex cursor-pointer items-center justify-center"

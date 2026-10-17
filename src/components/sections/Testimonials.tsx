@@ -54,7 +54,7 @@ export const Testimonials = () => {
         <div className="flex items-center gap-4 flex-wrap">
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="text-xs font-outfit font-extrabold px-4 py-2.5 rounded-full border border-emerald-200 bg-emerald-50 hover:border-emerald-400 hover:bg-emerald-100 text-emerald-800 transition-all duration-300 flex items-center gap-2"
+            className="text-xs font-outfit font-extrabold px-4 py-2.5 rounded-full border border-emerald-200 bg-emerald-50 hover:border-emerald-400 hover:bg-emerald-100 text-emerald-800 transition-all duration-300 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
             aria-label={isPlaying ? "Pause automatic reviews" : "Play automatic reviews"}
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5 text-emerald-600" /> : <Play className="w-3.5 h-3.5 text-emerald-600" />}
@@ -64,7 +64,7 @@ export const Testimonials = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={prevTestimonial}
-              className="p-3.5 rounded-full border border-zinc-300 bg-white hover:bg-emerald-600 hover:text-white text-zinc-950 transition-all duration-300 shadow-xs"
+              className="p-3.5 rounded-full border border-zinc-300 bg-white hover:bg-emerald-600 hover:text-white text-zinc-950 transition-all duration-300 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
               aria-label="Previous review"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -74,7 +74,7 @@ export const Testimonials = () => {
             </span>
             <button
               onClick={nextTestimonial}
-              className="p-3.5 rounded-full border border-zinc-300 bg-white hover:bg-emerald-600 hover:text-white text-zinc-950 transition-all duration-300 shadow-xs"
+              className="p-3.5 rounded-full border border-zinc-300 bg-white hover:bg-emerald-600 hover:text-white text-zinc-950 transition-all duration-300 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
               aria-label="Next review"
             >
               <ArrowRight className="w-4 h-4" />
@@ -142,7 +142,7 @@ export const Testimonials = () => {
             <button
               key={idx}
               onClick={() => setCurrentIndex(idx)}
-              className={`h-2 rounded-full transition-all duration-300 ${
+              className={`h-2 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2 ${
                 idx === currentIndex ? "w-8 bg-emerald-600" : "w-2 bg-zinc-300 hover:bg-zinc-500"
               }`}
               aria-label={`Jump to review ${idx + 1}`}

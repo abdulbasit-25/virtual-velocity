@@ -1,12 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { CAPABILITIES } from "@/data/agencyData";
 import { Cpu, Palette, Sparkles, Terminal, Layers, Compass } from "lucide-react";
 
 const ICONS = [Palette, Terminal, Cpu, Sparkles, Layers, Compass];
 
 export const Capabilities = () => {
+  const reduceMotion = useReducedMotion();
+
   return (
     <section className="py-24 sm:py-36 px-6 sm:px-12 max-w-[1700px] mx-auto relative overflow-hidden bg-white">
       <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-zinc-200 pb-12 mb-16">
@@ -35,7 +37,7 @@ export const Capabilities = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              whileHover={{ y: -8 }}
+              whileHover={reduceMotion ? undefined : { y: -8 }}
               className="group p-8 rounded-3xl bg-zinc-50 border border-zinc-200 hover:border-zinc-900 transition-all duration-500 flex flex-col justify-between space-y-8 relative overflow-hidden shadow-sm"
               data-cursor-pointer
             >

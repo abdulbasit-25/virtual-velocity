@@ -289,7 +289,7 @@ export function CommunitiesShowcaseBars() {
                 >
                   {/* Floating Orb at Top Center */}
                   <div className="absolute -top-8 sm:-top-9 xl:-top-10 inset-x-0 flex justify-center pointer-events-none z-30">
-                    <div className="gsap-comm-orb pointer-events-auto transition-transform duration-300 group-hover:scale-120 group-hover:-translate-y-1">
+                    <div className="gsap-comm-orb pointer-events-auto transition-transform duration-300 group-hover:scale-105 group-hover:-translate-y-1">
                       <AvatarOrb
                         iconSrc={comm.iconSrc}
                         name={comm.name}

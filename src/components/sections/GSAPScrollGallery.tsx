@@ -62,7 +62,7 @@ function ProjectCard({
                 ? "(max-width: 768px) 100vw, 50vw"
                 : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             }
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent" />
           <div className="absolute inset-x-4 top-4 flex items-start justify-between gap-3">

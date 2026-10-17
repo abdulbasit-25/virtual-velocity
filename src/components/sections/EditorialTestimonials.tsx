@@ -404,7 +404,7 @@ export const EditorialTestimonials = () => {
                         onClick={() => setRating(starVal)}
                         onMouseEnter={() => setHoverRating(starVal)}
                         onMouseLeave={() => setHoverRating(null)}
-                        className="p-1 text-amber-400 hover:scale-125 transition-transform cursor-pointer"
+                        className="p-1 text-amber-400 hover:scale-105 transition-transform duration-200 cursor-pointer"
                         aria-label={`Rate ${starVal} stars`}
                         aria-pressed={rating === starVal}
                       >

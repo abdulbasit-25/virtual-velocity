@@ -226,7 +226,7 @@ export const GSAPRevolvingServices = () => {
             <button
               type="button"
               onClick={prevService}
-              className="p-1.5 sm:p-2 rounded-full text-zinc-700 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+              className="p-1.5 sm:p-2 rounded-full text-zinc-700 hover:text-emerald-600 hover:bg-emerald-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
               aria-label="Previous Service"
             >
               <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -234,7 +234,7 @@ export const GSAPRevolvingServices = () => {
             <button
               type="button"
               onClick={nextService}
-              className="p-1.5 sm:p-2 rounded-full text-zinc-700 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+              className="p-1.5 sm:p-2 rounded-full text-zinc-700 hover:text-emerald-600 hover:bg-emerald-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
               aria-label="Next Service"
             >
               <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />

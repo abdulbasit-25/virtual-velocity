@@ -4,10 +4,13 @@ import {
   cloneElement,
   useEffect,
   useId,
+  useLayoutEffect,
+  useRef,
   useState,
   type ReactElement,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
@@ -89,68 +92,168 @@ function Tooltip({
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState<{
+    top: number;
+    left: number;
+    side: "top" | "bottom" | "left";
+  } | null>(null);
   const reduce = useReducedMotion();
+  const triggerRef = useRef<HTMLSpanElement>(null);
+  const tooltipRef = useRef<HTMLSpanElement>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelClose = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+  };
+
+  const scheduleClose = () => {
+    cancelClose();
+    closeTimeoutRef.current = setTimeout(() => {
+      setOpen(false);
+      closeTimeoutRef.current = null;
+    }, 120);
+  };
+
+  const close = () => {
+    cancelClose();
+    setOpen(false);
+  };
+
+  useEffect(() => () => cancelClose(), []);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+
+    const updatePosition = () => {
+      const trigger = triggerRef.current;
+      const tooltip = tooltipRef.current;
+      if (!trigger || !tooltip) return;
+
+      const rect = trigger.getBoundingClientRect();
+      const width = tooltip.offsetWidth;
+      const height = tooltip.offsetHeight;
+      const gap = 12;
+      const margin = 8;
+      const roomAbove = rect.top;
+      const roomBelow = window.innerHeight - rect.bottom;
+
+      let nextSide = side;
+      if (side === "top" && roomAbove < height + gap + margin) {
+        nextSide = "bottom";
+      } else if (side === "bottom" && roomBelow < height + gap + margin) {
+        nextSide = "top";
+      } else if (side === "left" && rect.left < width + gap + margin) {
+        nextSide = roomAbove >= height + gap + margin ? "top" : "bottom";
+      }
+
+      const rawLeft =
+        nextSide === "left"
+          ? rect.left - width - gap
+          : rect.left + rect.width / 2 - width / 2;
+      const rawTop =
+        nextSide === "top"
+          ? rect.top - height - gap
+          : nextSide === "bottom"
+            ? rect.bottom + gap
+            : rect.top + rect.height / 2 - height / 2;
+      const maxLeft = Math.max(margin, window.innerWidth - width - margin);
+      const maxTop = Math.max(margin, window.innerHeight - height - margin);
+      const nextPosition = {
+        left: Math.min(maxLeft, Math.max(margin, rawLeft)),
+        top: Math.min(maxTop, Math.max(margin, rawTop)),
+        side: nextSide,
+      };
+
+      setPosition((current) =>
+        current?.left === nextPosition.left &&
+        current.top === nextPosition.top &&
+        current.side === nextPosition.side
+          ? current
+          : nextPosition,
+      );
+    };
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [open, side]);
 
   const trigger = cloneElement(children, {
     "aria-describedby": open ? id : undefined,
   });
 
-  const position =
-    side === "top"
-      ? "bottom-full left-1/2 mb-3 -translate-x-1/2"
-      : side === "bottom"
-        ? "top-full left-1/2 mt-3 -translate-x-1/2"
-        : "right-full top-1/2 mr-3 -translate-y-1/2";
-
+  const tooltipSide = position?.side ?? side;
   const arrow =
-    side === "top"
+    tooltipSide === "top"
       ? "left-1/2 top-full -translate-x-1/2 -translate-y-1/2"
-      : side === "bottom"
+      : tooltipSide === "bottom"
         ? "left-1/2 bottom-full -translate-x-1/2 translate-y-1/2"
         : "left-full top-1/2 -translate-x-1/2 -translate-y-1/2";
 
   const offset = reduce
     ? { opacity: 0 }
-    : side === "top"
+    : tooltipSide === "top"
       ? { opacity: 0, y: 6, scale: 0.96 }
-      : side === "bottom"
+      : tooltipSide === "bottom"
         ? { opacity: 0, y: -6, scale: 0.96 }
         : { opacity: 0, x: 6, scale: 0.96 };
 
   return (
     <span
+      ref={triggerRef}
       className={`relative ${block ? "block w-full" : "inline-flex"}`}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      onFocus={() => setOpen(true)}
-      onBlur={() => setOpen(false)}
-      onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
+      onMouseEnter={() => {
+        cancelClose();
+        setOpen(true);
+      }}
+      onMouseLeave={scheduleClose}
+      onFocus={() => {
+        cancelClose();
+        setOpen(true);
+      }}
+      onBlur={close}
+      onKeyDown={(e) => e.key === "Escape" && close()}
     >
       {trigger}
-      <AnimatePresence>
-        {open && (
-          <span
-            className={`pointer-events-none absolute z-[60] ${position}`}
-            aria-hidden={false}
-          >
-            <motion.span
-              id={id}
-              role="tooltip"
-              initial={offset}
-              animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-              exit={offset}
-              transition={{ duration: 0.16, ease: "easeOut" }}
-              className="relative block whitespace-nowrap rounded-lg bg-zinc-950 px-3 py-1.5 text-xs font-semibold tracking-wide text-white shadow-xl shadow-black/30 ring-1 ring-white/10"
-            >
-              {label}
-              <span
-                aria-hidden="true"
-                className={`absolute h-2 w-2 rotate-45 bg-zinc-950 ${arrow}`}
-              />
-            </motion.span>
-          </span>
+      {typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <motion.span
+                ref={tooltipRef}
+                id={id}
+                role="tooltip"
+                initial={offset}
+                animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+                exit={offset}
+                transition={{ duration: 0.16, ease: "easeOut" }}
+                style={{
+                  position: "fixed",
+                  top: position?.top ?? 0,
+                  left: position?.left ?? 0,
+                  visibility: position ? "visible" : "hidden",
+                }}
+                onMouseEnter={cancelClose}
+                onMouseLeave={scheduleClose}
+                className="pointer-events-auto z-[60] block whitespace-nowrap rounded-lg bg-zinc-950 px-3 py-1.5 text-xs font-semibold tracking-wide text-white shadow-xl shadow-black/30 ring-1 ring-white/10"
+              >
+                {label}
+                <span
+                  aria-hidden="true"
+                  className={`absolute h-2 w-2 rotate-45 bg-zinc-950 ${arrow}`}
+                />
+              </motion.span>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </span>
   );
 }

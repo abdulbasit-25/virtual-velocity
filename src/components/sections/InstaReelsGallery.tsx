@@ -118,7 +118,7 @@ function ReelCard({
         alt={duplicate ? "" : `${reel.client}: ${reel.title}`}
         fill
         sizes="(max-width: 640px) 68vw, (max-width: 1024px) 34vw, 230px"
-        className="object-cover transition-transform duration-700 group-hover:scale-105"
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/10 to-zinc-950/10" />
       <span
