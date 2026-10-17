@@ -64,6 +64,13 @@ export const CHAT_KNOWLEDGE = {
       description: "Custom web applications, Next.js development, and cloud software.",
     },
   ] satisfies ChatService[],
+  additionalCapabilities: [
+    "Creative direction",
+    "Photography",
+    "Videography",
+    "Conversion rate optimization",
+    "AI-driven growth analytics",
+  ],
   caseStudies: [
     {
       name: "The Salt Line",
@@ -77,7 +84,15 @@ export const CHAT_KNOWLEDGE = {
     },
   ],
   media: {
-    channels: ["Rawalpindians", "Islamabad Insider", "Sirf Chai"],
+    channels: [
+      "Rawalpindians",
+      "Islamabad Insider",
+      "Sirf Chai",
+      "Lahorians",
+      "Life of Islamabad",
+      "Islamabad Reels",
+      "SnapSeedPak",
+    ],
     page: "/owned-media",
     kit: "/Virtual%20Velocity%20Profile%20(1).pdf",
   },
