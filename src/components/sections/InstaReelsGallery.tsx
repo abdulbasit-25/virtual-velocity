@@ -1,9 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Play, Sparkles } from "lucide-react";
 import { SectionHeader } from "@/components/sections/home/primitives";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const BRAND_REELS = [
   {
@@ -104,12 +109,16 @@ const BRAND_REELS = [
   },
 ] as const;
 
+type BrandReel = (typeof BRAND_REELS)[number];
+
 function ReelCard({
   reel,
   duplicate = false,
+  onSelect,
 }: {
-  reel: (typeof BRAND_REELS)[number];
+  reel: BrandReel;
   duplicate?: boolean;
+  onSelect: (reel: BrandReel) => void;
 }) {
   const content = (
     <>
@@ -148,50 +157,81 @@ function ReelCard({
           {content}
         </div>
       ) : (
-        <Link
-          href={reel.videoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Watch ${reel.title} on Instagram`}
+        <button
+          type="button"
+          onClick={() => onSelect(reel)}
+          aria-label={`Play ${reel.title}`}
           className={className}
         >
           {content}
-        </Link>
+        </button>
       )}
     </li>
   );
 }
 
-export const InstaReelsGallery = () => (
-  <section
-    aria-labelledby="reels-heading"
-    className="home-section overflow-hidden border-t border-zinc-200 bg-zinc-50 text-zinc-900"
-  >
-    <div className="home-container">
-      <SectionHeader
-        eyebrow={<><Sparkles aria-hidden="true" className="h-3.5 w-3.5" /> Featured works / reels &amp; media</>}
-        index="05"
-        title={<>Brand <span className="text-[#00A29F]">Gallery</span></>}
-      />
-      <h2 id="reels-heading" className="sr-only">Brand gallery</h2>
-    </div>
-    <div className="hover-marquee group relative overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-zinc-50 to-transparent sm:w-20"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-zinc-50 to-transparent sm:w-20"
-      />
-      <ul className="animate-marquee-left group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] flex w-max gap-4 px-4 sm:gap-6 sm:px-8">
-        {BRAND_REELS.map((reel) => (
-          <ReelCard key={reel.id} reel={reel} />
-        ))}
-        {BRAND_REELS.map((reel) => (
-          <ReelCard key={`${reel.id}-loop`} reel={reel} duplicate />
-        ))}
-      </ul>
-    </div>
-  </section>
-);
+export const InstaReelsGallery = () => {
+  const [selectedReel, setSelectedReel] = useState<BrandReel | null>(null);
+
+  return (
+    <>
+      <section
+        aria-labelledby="reels-heading"
+        className="home-section overflow-hidden border-t border-zinc-200 bg-zinc-50 text-zinc-900"
+      >
+        <div className="home-container">
+          <SectionHeader
+            eyebrow={<><Sparkles aria-hidden="true" className="h-3.5 w-3.5" /> Featured works / reels &amp; media</>}
+            index="05"
+            title={<>Brand <span className="text-[#00A29F]">Gallery</span></>}
+          />
+          <h2 id="reels-heading" className="sr-only">Brand gallery</h2>
+        </div>
+        <div className="hover-marquee group relative overflow-hidden">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-zinc-50 to-transparent sm:w-20"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-zinc-50 to-transparent sm:w-20"
+          />
+          <ul className="animate-marquee-left group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] flex w-max gap-4 px-4 sm:gap-6 sm:px-8">
+            {BRAND_REELS.map((reel) => (
+              <ReelCard key={reel.id} reel={reel} onSelect={setSelectedReel} />
+            ))}
+            {BRAND_REELS.map((reel) => (
+              <ReelCard
+                key={`${reel.id}-loop`}
+                reel={reel}
+                duplicate
+                onSelect={setSelectedReel}
+              />
+            ))}
+          </ul>
+        </div>
+      </section>
+      <Dialog
+        open={selectedReel !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedReel(null);
+        }}
+      >
+        <DialogContent className="max-h-[90dvh] w-[min(92vw,420px)] max-w-none overflow-hidden border-0 bg-zinc-950 p-0 shadow-2xl">
+          {selectedReel && (
+            <>
+              <DialogTitle className="sr-only">{selectedReel.title}</DialogTitle>
+              <iframe
+                src={`${selectedReel.videoUrl}embed/`}
+                title={selectedReel.title}
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                allowFullScreen
+                className="aspect-[9/16] w-full"
+              />
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
