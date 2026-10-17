@@ -37,7 +37,6 @@ function ProjectCard({
 }) {
   const href = project.liveUrl ?? "#contact";
   const isExternal = project.liveUrl?.startsWith("http") ?? false;
-  const headlineResult = project.results[0];
   const secondaryResult = project.results[1];
 
   return (
@@ -64,34 +63,6 @@ function ProjectCard({
             }
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent" />
-          <div className="absolute inset-x-4 top-4 flex items-start justify-between gap-3">
-            <span className="rounded-full border border-white/30 bg-zinc-950/55 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur">
-              {project.number} / {project.year}
-            </span>
-            <span className="rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-zinc-900">
-              {project.industry}
-            </span>
-          </div>
-          <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 text-white">
-            <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-[0.15em] text-white/75">
-                {project.client}
-              </p>
-              {headlineResult && (
-                <p
-                  className={`mt-2 max-w-[22ch] font-outfit font-black leading-[1.02] tracking-tight ${
-                    featured ? "text-2xl sm:text-4xl" : "text-xl sm:text-2xl"
-                  }`}
-                >
-                  {headlineResult}
-                </p>
-              )}
-            </div>
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/50 bg-white/10 transition-all duration-300 group-hover:rotate-45 group-hover:bg-[#00A29F] group-hover:text-white">
-              <ArrowUpRight aria-hidden="true" className="h-5 w-5" />
-            </span>
-          </div>
         </div>
 
         <div className="flex flex-1 flex-col p-5 sm:p-6">
