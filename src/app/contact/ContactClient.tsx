@@ -77,7 +77,12 @@ function SelectedServices() {
 
 function ContactForm() {
   const params = useSearchParams();
-  return <Contact servicesQuery={params.get("services")} />;
+  return (
+    <Contact
+      endpoint={process.env.NEXT_PUBLIC_CONTACT_ENDPOINT}
+      servicesQuery={params.get("services")}
+    />
+  );
 }
 
 export function ContactClient() {
@@ -95,7 +100,7 @@ export function ContactClient() {
 
   return (
     <SmoothScrollProvider>
-      <main className="min-h-screen bg-white text-zinc-900 relative selection:bg-zinc-900 selection:text-white font-outfit">
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-white text-zinc-900 relative selection:bg-zinc-900 selection:text-white font-outfit">
         <CustomCursor />
         <Navigation />
 
