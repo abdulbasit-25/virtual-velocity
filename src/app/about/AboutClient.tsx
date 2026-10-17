@@ -193,6 +193,8 @@ export function AboutClient() {
   return (
     <SmoothScrollProvider>
       <main
+        id="main-content"
+        tabIndex={-1}
         ref={scopeRef}
         className="relative min-h-screen bg-white font-outfit text-zinc-900 selection:bg-zinc-900 selection:text-white"
       >
