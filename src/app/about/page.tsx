@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
+import { BreadcrumbJsonLd } from "@/components/seo/BreadcrumbJsonLd";
 import { AboutClient } from "./AboutClient";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.thevirtualvelocity.com"),
   alternates: {
-    canonical: "https://www.thevirtualvelocity.com/about",
+    canonical: `${SITE_URL}/about`,
   },
-  title: "About Virtual Velocity | Premier Digital Marketing & BPO Agency",
-  description: "Learn about Virtual Velocity, Pakistan's premier Digital Marketing Agency & BPO provider founded by Tauseef Alam in Islamabad.",
+  title: "About",
+  description: "Discover Virtual Velocity, its founder Tauseef Alam, and the agency's digital marketing and media work. Explore its story, services, and owned media channels.",
   keywords: [
     "Digital Marketing Agency Pakistan",
     "Digital Marketing Agency Islamabad",
@@ -22,12 +23,29 @@ export const metadata: Metadata = {
     "Islamabad Insider Media Agency",
   ],
   openGraph: {
+    url: `${SITE_URL}/about`,
     title: "About Virtual Velocity | Digital Marketing Agency Pakistan & Global Hubs",
-    description: "Learn about Virtual Velocity's manifesto, founder Tauseef Alam, and operational hubs in Islamabad, US, and UK.",
-    url: "https://www.thevirtualvelocity.com/about",
+    description: "Discover Virtual Velocity, its founder Tauseef Alam, and the agency's digital marketing and media work. Explore its story, services, and owned media channels.",
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "About Virtual Velocity" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Virtual Velocity",
+    description: "Learn about Virtual Velocity and its founder, Tauseef Alam.",
+    images: [{ url: SOCIAL_IMAGE, alt: "About Virtual Velocity" }],
   },
 };
 
 export default function AboutPage() {
-  return <AboutClient />;
+  return (
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "About", path: "/about" },
+        ]}
+      />
+      <AboutClient />
+    </>
+  );
 }
