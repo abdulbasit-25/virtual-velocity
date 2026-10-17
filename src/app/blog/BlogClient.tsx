@@ -251,6 +251,8 @@ export function BlogClient() {
   return (
     <SmoothScrollProvider>
       <main
+        id="main-content"
+        tabIndex={-1}
         ref={scopeRef}
         className="relative min-h-screen bg-white text-zinc-900 selection:bg-zinc-900 selection:text-white font-outfit"
       >
