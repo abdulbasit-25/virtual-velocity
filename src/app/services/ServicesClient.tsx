@@ -364,6 +364,7 @@ export function ServicesClient() {
                 const isOn = selected.includes(id);
                 return (
                   <motion.article
+                    id={id}
                     layout={!reduce}
                     key={id}
                     initial={{ opacity: 0, y: reduce ? 0 : 20 }}
@@ -371,7 +372,7 @@ export function ServicesClient() {
                     viewport={{ once: true, margin: "-60px" }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                    className={`group relative border-b border-zinc-200 py-7 sm:py-9 lg:py-11 px-2 sm:px-4 transition-colors duration-300 ${
+                    className={`group relative scroll-mt-28 border-b border-zinc-200 py-7 sm:py-9 lg:py-11 px-2 sm:px-4 transition-colors duration-300 ${
                       isOn ? "bg-emerald-50/70" : "hover:bg-zinc-50/80"
                     }`}
                   >
