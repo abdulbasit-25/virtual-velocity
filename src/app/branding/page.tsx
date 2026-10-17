@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
+import { BreadcrumbJsonLd } from "@/components/seo/BreadcrumbJsonLd";
 import { BrandingClient } from "./BrandingClient";
 
 export const metadata: Metadata = {
-  title: "Cresto Pizza Brand Identity & Packaging Case Study | Virtual Velocity",
+  alternates: { canonical: `${SITE_URL}/branding` },
+  title: "Cresto Pizza Branding Case Study",
   description:
-    "Explore how Virtual Velocity crafted an end-to-end brand identity, 3D architectural signage, custom packaging ecosystem, and viral social campaigns for Cresto Pizza.",
+    "See how Virtual Velocity developed brand identity, custom packaging, 3D signage, and social campaigns for Cresto Pizza in this restaurant branding case study.",
   keywords: [
     "Cresto Pizza Branding",
     "Brand Identity Design",
@@ -16,19 +19,12 @@ export const metadata: Metadata = {
     "Social Media Direction",
   ],
   openGraph: {
+    url: `${SITE_URL}/branding`,
     title: "Cresto Pizza Brand Identity & Packaging | Virtual Velocity Agency",
     description:
-      "A modern slice of tradition. Complete visual identity, custom packaging, 3D signage, and digital campaigns crafted by Virtual Velocity.",
-    url: "https://www.thevirtualvelocity.com/branding",
+      "See how Virtual Velocity developed brand identity, custom packaging, 3D signage, and social campaigns for Cresto Pizza in this restaurant branding case study.",
     siteName: "Virtual Velocity Digital Agency",
-    images: [
-      {
-        url: "https://res.cloudinary.com/nudghwmz/image/upload/v1790005642/Artboard_1.png",
-        width: 1596,
-        height: 897,
-        alt: "Cresto Pizza Brand Identity Mockup",
-      },
-    ],
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "Cresto Pizza branding case study by Virtual Velocity" }],
     locale: "en_US",
     type: "article",
   },
@@ -36,11 +32,21 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Cresto Pizza Brand Identity Case Study | Virtual Velocity",
     description:
-      "Modern culinary branding, custom packaging engineering, and architectural signage for Cresto Pizza.",
-    images: ["https://res.cloudinary.com/nudghwmz/image/upload/v1790005642/Artboard_1.png"],
+      "See how Virtual Velocity developed brand identity, custom packaging, 3D signage, and social campaigns for Cresto Pizza in this restaurant branding case study.",
+    images: [{ url: SOCIAL_IMAGE, alt: "Cresto Pizza branding case study by Virtual Velocity" }],
   },
 };
 
 export default function BrandingPage() {
-  return <BrandingClient />;
+  return (
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Branding", path: "/branding" },
+        ]}
+      />
+      <BrandingClient />
+    </>
+  );
 }
