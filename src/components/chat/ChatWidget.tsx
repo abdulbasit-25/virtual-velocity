@@ -12,6 +12,22 @@ const ChatPanel = dynamic(
 const OPEN_KEY = "vv-chat-open";
 const TEASER_KEY = "vv-chat-teaser-seen";
 
+function readSessionFlag(key: string) {
+  try {
+    return sessionStorage.getItem(key) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function writeSessionFlag(key: string, value: boolean) {
+  try {
+    sessionStorage.setItem(key, String(value));
+  } catch {
+    // The widget remains usable without browser storage.
+  }
+}
+
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [showTeaser, setShowTeaser] = useState(false);
@@ -19,23 +35,26 @@ export function ChatWidget() {
   const launcherRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setIsOpen(sessionStorage.getItem(OPEN_KEY) === "true");
-    setIsReady(true);
+    const frame = window.requestAnimationFrame(() => {
+      setIsOpen(readSessionFlag(OPEN_KEY));
+      setIsReady(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
     if (!isReady) return;
-    sessionStorage.setItem(OPEN_KEY, String(isOpen));
+    writeSessionFlag(OPEN_KEY, isOpen);
   }, [isOpen, isReady]);
 
   useEffect(() => {
-    if (!isReady || isOpen || sessionStorage.getItem(TEASER_KEY)) return;
+    if (!isReady || isOpen || readSessionFlag(TEASER_KEY)) return;
     const timeout = window.setTimeout(() => setShowTeaser(true), 8000);
     return () => window.clearTimeout(timeout);
   }, [isOpen, isReady]);
 
   const dismissTeaser = useCallback(() => {
-    sessionStorage.setItem(TEASER_KEY, "true");
+    writeSessionFlag(TEASER_KEY, true);
     setShowTeaser(false);
   }, []);
 
@@ -90,9 +109,7 @@ export function ChatWidget() {
       {isOpen && (
         <ChatPanel
           onClose={closeChat}
-          onHandoff={() => {
-            setIsOpen(false);
-          }}
+          onHandoff={closeChat}
         />
       )}
     </>
