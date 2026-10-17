@@ -1,18 +1,43 @@
 import type { Metadata } from "next";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
+import { BreadcrumbJsonLd } from "@/components/seo/BreadcrumbJsonLd";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 
 export const metadata: Metadata = {
+  alternates: { canonical: `${SITE_URL}/terms-of-use` },
   title: "Terms of Use",
-  description: "Virtual Velocity Terms of Use, legal framework, and intellectual property rights.",
+  description:
+    "Review the Terms of Use for rules about website access, project inquiries, published content, and ownership of visual, interface, and digital assets.",
+  openGraph: {
+    url: `${SITE_URL}/terms-of-use`,
+    title: "Terms of Use | Virtual Velocity",
+    description:
+      "Review the Terms of Use for rules about website access, project inquiries, published content, and ownership of visual, interface, and digital assets.",
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "Virtual Velocity" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms of Use | Virtual Velocity",
+    description:
+      "Review the Terms of Use for rules about website access, project inquiries, published content, and ownership of visual, interface, and digital assets.",
+    images: [{ url: SOCIAL_IMAGE, alt: "Virtual Velocity" }],
+  },
 };
 
 export default function TermsOfUsePage() {
   return (
-    <SmoothScrollProvider>
-      <main className="min-h-screen bg-white text-zinc-900 relative font-outfit">
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Terms of Use", path: "/terms-of-use" },
+        ]}
+      />
+      <SmoothScrollProvider>
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-white text-zinc-900 relative font-outfit">
         <CustomCursor />
         <Navigation />
 
@@ -46,6 +71,7 @@ export default function TermsOfUsePage() {
 
         <Footer />
       </main>
-    </SmoothScrollProvider>
+      </SmoothScrollProvider>
+    </>
   );
 }
