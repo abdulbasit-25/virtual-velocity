@@ -1,18 +1,43 @@
 import type { Metadata } from "next";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
+import { BreadcrumbJsonLd } from "@/components/seo/BreadcrumbJsonLd";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 
 export const metadata: Metadata = {
+  alternates: { canonical: `${SITE_URL}/privacy-policy` },
   title: "Privacy Policy",
-  description: "Virtual Velocity Privacy Policy and Data Protection Framework across United States & Pakistan hubs.",
+  description:
+    "Read the Virtual Velocity Privacy Policy to learn how it describes contact data, purposes of use, privacy practices, and the process for directing questions.",
+  openGraph: {
+    url: `${SITE_URL}/privacy-policy`,
+    title: "Privacy Policy | Virtual Velocity",
+    description:
+      "Read the Virtual Velocity Privacy Policy to learn how it describes contact data, purposes of use, privacy practices, and the process for directing questions.",
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "Virtual Velocity" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy | Virtual Velocity",
+    description:
+      "Read the Virtual Velocity Privacy Policy to learn how it describes contact data, purposes of use, privacy practices, and the process for directing questions.",
+    images: [{ url: SOCIAL_IMAGE, alt: "Virtual Velocity" }],
+  },
 };
 
 export default function PrivacyPolicyPage() {
   return (
-    <SmoothScrollProvider>
-      <main className="min-h-screen bg-white text-zinc-900 relative font-outfit">
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Privacy Policy", path: "/privacy-policy" },
+        ]}
+      />
+      <SmoothScrollProvider>
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-white text-zinc-900 relative font-outfit">
         <CustomCursor />
         <Navigation />
 
@@ -53,6 +78,7 @@ export default function PrivacyPolicyPage() {
 
         <Footer />
       </main>
-    </SmoothScrollProvider>
+      </SmoothScrollProvider>
+    </>
   );
 }
