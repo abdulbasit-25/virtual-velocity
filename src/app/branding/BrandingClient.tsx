@@ -245,7 +245,8 @@ export function BrandingClient() {
       <CustomCursor />
       <Navigation />
 
-      <main className="m-0 w-full overflow-x-hidden bg-[#0a0a0a] p-0">
+      <main id="main-content" tabIndex={-1} className="m-0 w-full overflow-x-hidden bg-[#0a0a0a] p-0">
+        <h1 className="sr-only">Cresto Pizza Branding Case Study</h1>
         {/* Portfolio slides, joined end-to-end with overlapping rounded edges */}
         <section
           aria-label="Cresto Pizza branding case study"
