@@ -1,13 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.SUPABASE_URL ||
-  "https://xyzcompany.supabase.co";
+  process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
 
 const supabaseKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummykey";
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabaseServer = createClient(supabaseUrl, supabaseKey);
+export const supabaseServer =
+  supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
