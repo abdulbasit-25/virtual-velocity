@@ -6,6 +6,7 @@ import { About } from "@/components/sections/About";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { MotionPreferences } from "@/components/sections/home/MotionPreferences";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Below-the-fold sections are code-split with `next/dynamic`. Their JS (and the
@@ -56,9 +57,9 @@ const CustomCursor = dynamic(() =>
 );
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.thevirtualvelocity.com"),
+  metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: "https://www.thevirtualvelocity.com",
+    canonical: SITE_URL,
   },
   title: "Virtual Velocity | Digital Marketing & BPO Agency",
   description:
@@ -94,7 +95,22 @@ export const metadata: Metadata = {
     title: "Virtual Velocity | Digital Marketing & BPO Agency",
     description:
       "Pakistan's premier Digital Marketing Agency & BPO service provider. Performance marketing, SEO, Meta Ads & Google Ads.",
-    url: "https://www.thevirtualvelocity.com",
+    url: SITE_URL,
+    images: [
+      {
+        url: SOCIAL_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Virtual Velocity Digital Marketing Agency Pakistan",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Virtual Velocity | Digital Marketing & BPO Agency",
+    description:
+      "Performance marketing, SEO, Meta Ads, Google Ads, branding and BPO services from Virtual Velocity.",
+    images: [{ url: SOCIAL_IMAGE, alt: "Virtual Velocity Digital Marketing Agency Pakistan" }],
   },
 };
 
@@ -102,7 +118,7 @@ export default function Home() {
   return (
     <SmoothScrollProvider>
       <MotionPreferences>
-        <main className="relative min-h-screen bg-white font-outfit text-zinc-900 selection:bg-zinc-900 selection:text-white">
+        <main id="main-content" tabIndex={-1} className="relative min-h-screen bg-white font-outfit text-zinc-900 selection:bg-zinc-900 selection:text-white">
           {/* Custom Award-Style Dynamic Cursor */}
           <CustomCursor />
 
