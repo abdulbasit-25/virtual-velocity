@@ -140,7 +140,7 @@ export function ServicesClient() {
 
   return (
     <SmoothScrollProvider>
-      <main className="min-h-screen bg-white text-zinc-900 relative selection:bg-zinc-900 selection:text-white font-outfit">
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-white text-zinc-900 relative selection:bg-zinc-900 selection:text-white font-outfit">
         <CustomCursor />
         <Navigation />
 
