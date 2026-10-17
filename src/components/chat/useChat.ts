@@ -22,6 +22,39 @@ const createGreeting = (): ChatMessage => ({
   actions: [{ label: "Explore services", href: "/services" }],
 });
 
+function isStoredMessage(value: unknown): value is ChatMessage {
+  if (!value || typeof value !== "object") return false;
+  const message = value as Partial<ChatMessage>;
+  const validActions =
+    message.actions === undefined ||
+    (Array.isArray(message.actions) &&
+      message.actions.every((action) => {
+        if (!action || typeof action !== "object") return false;
+        const candidate = action as Partial<ChatAction>;
+        const safeHref =
+          typeof candidate.href === "string" &&
+          ((candidate.href.startsWith("/") &&
+            !candidate.href.startsWith("//") &&
+            !candidate.href.startsWith("/\\")) ||
+            candidate.href.startsWith("mailto:") ||
+            candidate.href.startsWith("tel:"));
+        return (
+          typeof candidate.label === "string" &&
+          safeHref &&
+          (candidate.external === undefined ||
+            typeof candidate.external === "boolean")
+        );
+      }));
+
+  return (
+    (message.role === "user" || message.role === "assistant") &&
+    typeof message.content === "string" &&
+    message.content.length <= MAX_MESSAGE_LENGTH * 2 &&
+    typeof message.id === "string" &&
+    validActions
+  );
+}
+
 function readStoredMessages(): ChatMessage[] {
   try {
     const stored = sessionStorage.getItem(STORAGE_KEY);
@@ -31,15 +64,9 @@ function readStoredMessages(): ChatMessage[] {
       Array.isArray(parsed) &&
       parsed.length > 0 &&
       parsed.length <= MAX_HISTORY &&
-      parsed.every(
-        (message) =>
-          message &&
-          (message.role === "user" || message.role === "assistant") &&
-          typeof message.content === "string" &&
-          typeof message.id === "string",
-      )
+      parsed.every(isStoredMessage)
     ) {
-      return parsed as ChatMessage[];
+      return parsed;
     }
     return [createGreeting()];
   } catch {
@@ -56,13 +83,23 @@ export function useChat() {
   > | null>(null);
 
   useEffect(() => {
-    setMessages(readStoredMessages());
-    setIsHydrated(true);
+    const frame = window.requestAnimationFrame(() => {
+      setMessages(readStoredMessages());
+      setIsHydrated(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
     if (isHydrated) {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-MAX_HISTORY)));
+      try {
+        sessionStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify(messages.slice(-MAX_HISTORY)),
+        );
+      } catch {
+        // Keep the conversation available in memory if session storage is unavailable.
+      }
     }
   }, [isHydrated, messages]);
 
