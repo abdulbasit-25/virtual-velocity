@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { SITE_URL, SOCIAL_IMAGE } from "@/lib/site";
+import { BreadcrumbJsonLd } from "@/components/seo/BreadcrumbJsonLd";
 import { ContactClient } from "./ContactClient";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.thevirtualvelocity.com"),
   alternates: {
-    canonical: "https://www.thevirtualvelocity.com/contact",
+    canonical: `${SITE_URL}/contact`,
   },
-  title: "Contact Virtual Velocity | Digital Marketing & BPO Agency",
-  description: "Contact Virtual Velocity in Islamabad, US & UK for Digital Marketing, BPO Services, Hotel & Restaurant Growth, Meta Ads & Google Ads.",
+  title: "Contact",
+  description: "Contact Virtual Velocity about digital marketing, BPO, hospitality, branding, SEO, Meta Ads, and Google Ads. Find published contact details and inquiry options.",
   keywords: [
     "Digital Marketing Agency Pakistan",
     "Digital Marketing Agency Islamabad",
@@ -23,12 +24,29 @@ export const metadata: Metadata = {
     "Virtual Velocity Contact",
   ],
   openGraph: {
+    url: `${SITE_URL}/contact`,
     title: "Contact & Strategy Session | Virtual Velocity Agency Pakistan",
-    description: "Connect with our marketing specialists in Islamabad, US, and UK for Digital Marketing, BPO, Hotel, and Restaurant growth.",
-    url: "https://www.thevirtualvelocity.com/contact",
+    description: "Contact Virtual Velocity about digital marketing, BPO, hospitality, branding, SEO, Meta Ads, and Google Ads. Find published contact details and inquiry options.",
+    images: [{ url: SOCIAL_IMAGE, width: 1200, height: 630, alt: "Contact Virtual Velocity" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Virtual Velocity",
+    description: "Contact Virtual Velocity about digital marketing, BPO, hospitality, branding, SEO, Meta Ads, and Google Ads services.",
+    images: [{ url: SOCIAL_IMAGE, alt: "Contact Virtual Velocity" }],
   },
 };
 
 export default function ContactPage() {
-  return <ContactClient />;
+  return (
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Contact", path: "/contact" },
+        ]}
+      />
+      <ContactClient />
+    </>
+  );
 }
