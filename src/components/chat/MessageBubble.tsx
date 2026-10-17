@@ -36,7 +36,7 @@ export function MessageBubble({
 }) {
   const [copied, setCopied] = useState(false);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
-  const copyTimer = useRef<number>();
+  const copyTimer = useRef<number | undefined>(undefined);
   const isAssistant = message.role === "assistant";
 
   useEffect(() => () => window.clearTimeout(copyTimer.current), []);
