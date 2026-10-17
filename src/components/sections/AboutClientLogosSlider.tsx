@@ -60,16 +60,20 @@ function LogoTrack({
       {[...brands, ...brands].map((brand, index) => (
         <li
           key={`${brand.name}-${index}`}
-          className="flex h-[72px] w-[112px] shrink-0 items-center justify-center rounded-xl border border-zinc-200 bg-white px-4 py-3 transition-all duration-300 hover:border-[#00A29F]/50 hover:shadow-md sm:h-[88px] sm:w-[148px] sm:rounded-2xl"
+          title={brand.name}
+          className="group relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white p-2 transition-all duration-300 hover:border-[#00A29F]/50 hover:shadow-md sm:h-32 sm:w-32"
         >
           <Image
             src={brand.src}
             alt=""
             width={120}
             height={64}
-            sizes="(max-width: 640px) 112px, 148px"
-            className="h-8 w-full object-contain grayscale opacity-60 transition-all duration-300 hover:grayscale-0 hover:opacity-100 sm:h-10"
+            sizes="(max-width: 640px) 80px, 104px"
+            className="h-[84%] w-[84%] object-contain grayscale opacity-60 transition-all duration-300 group-hover:grayscale-0 group-hover:opacity-100 group-active:grayscale-0 group-active:opacity-100"
           />
+          <span className="absolute inset-x-1 bottom-2 z-10 rounded-full bg-zinc-950/80 px-1.5 py-1 text-center text-[9px] font-bold leading-tight text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-active:opacity-100 sm:text-[10px]">
+            {brand.name}
+          </span>
         </li>
       ))}
     </ul>
