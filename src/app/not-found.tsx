@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Home } from "lucide-react";
 import { Navigation } from "@/components/layout/Navigation";
@@ -5,10 +6,16 @@ import { Footer } from "@/components/layout/Footer";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 
+export const metadata: Metadata = {
+  title: "Page Not Found",
+  description: "The requested Virtual Velocity page could not be found.",
+  robots: { index: false, follow: false },
+};
+
 export default function NotFound() {
   return (
     <SmoothScrollProvider>
-      <main className="min-h-screen bg-white text-zinc-900 relative font-outfit flex flex-col justify-between">
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-white text-zinc-900 relative font-outfit flex flex-col justify-between">
         <CustomCursor />
         <Navigation />
 
