@@ -53,7 +53,7 @@ The platform is engineered to deliver an intentional, tailored experience across
 
 Ensure you have the following installed on your development machine:
 
-* **Node.js:** `v18.18.0` or higher (Recommended: `v20.x` or `v22.x LTS`)
+* **Node.js:** `v20.9.0` or higher (Recommended: `v22.x LTS`)
 * **Package Manager:** `npm` (v9+), `pnpm` (v8+), or `yarn`
 
 Check your current version:
@@ -87,7 +87,7 @@ To start the local development server with Turbopack fast-refresh:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your web browser.
+Open [http://localhost:3001](http://localhost:3001) in your web browser.
 
 ---
 
@@ -106,6 +106,16 @@ To test the production build locally:
 ```bash
 npm run start
 ```
+
+### Environment configuration
+
+Copy `.env.example` to `.env.local` before deployment and configure values for the target environment:
+
+* `NEXT_PUBLIC_SITE_URL` sets the canonical production origin. Set it to the final public URL before building.
+* `NEXT_PUBLIC_CONTACT_ENDPOINT` must point to an endpoint that accepts the contact form's JSON payload. Leave it blank only when the form is intentionally unavailable; the form then reports that it cannot submit.
+* `SUPABASE_URL` (or `NEXT_PUBLIC_SUPABASE_URL`) and `SUPABASE_SERVICE_ROLE_KEY` (or `NEXT_PUBLIC_SUPABASE_ANON_KEY`) configure optional review storage. Never expose a service-role key with a `NEXT_PUBLIC_` prefix.
+
+The app does not configure analytics. Review submission and contact delivery should be tested in the production environment after their endpoints and credentials are configured.
 
 ---
 
