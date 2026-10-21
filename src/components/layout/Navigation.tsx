@@ -433,10 +433,10 @@ export const Navigation = () => {
                     Inquiries
                   </span>
                   <a
-                    href="mailto:info@thevirtualvelocity.com"
+                    href="mailto:adddemail@gmail.com"
                     className="block font-outfit text-sm font-bold transition-colors hover:text-emerald-500"
                   >
-                    info@thevirtualvelocity.com
+                    adddemail@gmail.com
                   </a>
                 </div>
               </div>
