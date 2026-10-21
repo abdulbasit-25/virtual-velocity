@@ -30,7 +30,7 @@ export default function ErrorPage({
     window.setTimeout(() => setRetrying(false), 1200);
   };
 
-  const mailto = `mailto:admin@thevirtualvelocity.com?subject=${encodeURIComponent(
+  const mailto = `mailto:adddemail@gmail.com?subject=${encodeURIComponent(
     "Website error report",
   )}&body=${encodeURIComponent(
     `Hi team,\n\nI ran into an error on the website.\n\nPage: ${
