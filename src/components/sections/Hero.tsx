@@ -50,7 +50,7 @@ export const Hero = () => {
       {/* Main Hero Headline - 3 Lines with Decreasing Sizing & Emerald Accents */}
       <div className="relative z-10 my-auto py-6 sm:py-10 lg:py-16 flex flex-col justify-center select-none space-y-2 sm:space-y-3">
         {/* Line 1 - Largest */}
-        <div className="text-3xl sm:text-5xl lg:text-6xl xl:text-[7.2rem] font-outfit font-black tracking-tighter text-zinc-900 uppercase leading-[0.88] flex flex-wrap items-center gap-2 sm:gap-4">
+        <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-[4rem] font-outfit font-black tracking-tighter text-zinc-900 uppercase leading-[0.92] flex flex-wrap items-center gap-2 sm:gap-4">
           <SplitTextReveal text="FULL-SERVICE" accentColor="#00A29F" highlightWords={["SERVICE", "FULL-SERVICE"]} delay={0.2} />
           <SplitTextReveal text="DIGITAL" accentColor="#00A29F" highlightWords={["DIGITAL"]} delay={0.35} />
           <motion.span
@@ -64,12 +64,12 @@ export const Hero = () => {
         </div>
 
         {/* Line 2 - Medium Decreased Size */}
-        <div className="text-2xl sm:text-4xl lg:text-[3.5rem] xl:text-[4.2rem] font-outfit font-black tracking-tight text-zinc-900 uppercase leading-[0.90]">
+        <div className="text-2xl sm:text-3xl lg:text-[2.75rem] xl:text-[3rem] font-outfit font-black tracking-tight text-zinc-900 uppercase leading-[0.95]">
           <SplitTextReveal text="MARKETING & TECH SOLUTIONS" accentColor="#00A29F" highlightWords={["SOLUTIONS"]} delay={0.5} />
         </div>
 
         {/* Line 3 - Smallest Decreased Size */}
-        <div className="text-xl sm:text-3xl lg:text-[2.5rem] xl:text-[2.8rem] font-outfit font-black tracking-tight text-zinc-900 uppercase leading-[0.92]">
+        <div className="text-xl sm:text-2xl lg:text-[2rem] xl:text-[2.25rem] font-outfit font-black tracking-tight text-zinc-900 uppercase leading-[0.98]">
           <SplitTextReveal text="THAT SCALES YOUR BRAND REVENUE." accentColor="#00A29F" highlightWords={["REVENUE", "BRAND"]} delay={0.65} />
         </div>
       </div>
