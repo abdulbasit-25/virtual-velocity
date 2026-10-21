@@ -308,7 +308,7 @@ export const GSAPHeroTimeline = () => {
                         width={88}
                         height={48}
                         sizes="88px"
-                        className="h-9 w-auto max-w-20 object-contain opacity-100 sm:h-11"
+                        className={`${brand.name === "Chaaye Khana" ? "h-12 sm:h-14" : "h-9 sm:h-11"} w-auto max-w-20 object-contain opacity-100`}
                       />
                       <span
                         id={`hero-brand-tooltip-${index}`}
