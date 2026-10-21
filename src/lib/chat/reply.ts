@@ -13,7 +13,11 @@ export type ChatReply = {
 
 const CONTACT_ACTIONS: ChatAction[] = [
   { label: "Start your brief", href: "/contact" },
-  { label: "Email the team", href: "mailto:info@thevirtualvelocity.com", external: true },
+  {
+    label: "Email the team",
+    href: "mailto:adddemail@gmail.com",
+    external: true,
+  },
 ];
 
 const SERVICES_ACTION: ChatAction[] = [
@@ -22,7 +26,11 @@ const SERVICES_ACTION: ChatAction[] = [
 
 const HANDOFF_ACTIONS: ChatAction[] = [
   { label: "Start your brief", href: "/contact" },
-  { label: "Email info@thevirtualvelocity.com", href: "mailto:info@thevirtualvelocity.com", external: true },
+  {
+    label: "Email adddemail@gmail.com",
+    href: "mailto:adddemail@gmail.com",
+    external: true,
+  },
   ...CHAT_KNOWLEDGE.contacts.phones.map((phone) => ({
     label: `${phone.label}: ${phone.number}`,
     href: phone.href,
@@ -267,23 +275,87 @@ function detectIntent(message: string): Intent {
   )
     return "work";
 
-  if (includesAny(text, ["bpo", "outsourc", "call center", "customer support", "customer service", "بی پی او"]))
+  if (
+    includesAny(text, [
+      "bpo",
+      "outsourc",
+      "call center",
+      "customer support",
+      "customer service",
+      "بی پی او",
+    ])
+  )
     return "bpo";
   if (includesAny(text, ["hotel", "hospitality", "resort", "booking", "ہوٹل"]))
     return "hospitality";
-  if (includesAny(text, ["restaurant", "restaurants", "food business", "cafe", "café", "dining", "ریسٹورنٹ"]))
+  if (
+    includesAny(text, [
+      "restaurant",
+      "restaurants",
+      "food business",
+      "cafe",
+      "café",
+      "dining",
+      "ریسٹورنٹ",
+    ])
+  )
     return "restaurant";
-  if (includesAny(text, ["performance marketing", "google ads", "meta ads", "ppc", "paid ads", "advertising", "روزم"]))
+  if (
+    includesAny(text, [
+      "performance marketing",
+      "google ads",
+      "meta ads",
+      "ppc",
+      "paid ads",
+      "advertising",
+      "روزم",
+    ])
+  )
     return "performance";
-  if (includesAny(text, ["artificial intelligence", "ai-driven", "ai driven", "growth analytics"]))
+  if (
+    includesAny(text, [
+      "artificial intelligence",
+      "ai-driven",
+      "ai driven",
+      "growth analytics",
+    ])
+  )
     return "services";
-  if (includesAny(text, ["shopify", "website", "web app", "software", "development", "developer", "ویب سائٹ"]))
+  if (
+    includesAny(text, [
+      "shopify",
+      "website",
+      "web app",
+      "software",
+      "development",
+      "developer",
+      "ویب سائٹ",
+    ])
+  )
     return "development";
   if (includesAny(text, ["seo", "search engine", "technical seo"]))
     return "seo";
-  if (includesAny(text, ["social media", "influencer", "photography", "videography", "reels", "creator"]))
+  if (
+    includesAny(text, [
+      "social media",
+      "influencer",
+      "photography",
+      "videography",
+      "reels",
+      "creator",
+    ])
+  )
     return "social";
-  if (includesAny(text, ["brand", "branding", "identity", "logo", "creative", "packaging"]))
+  if (
+    includesAny(text, [
+      "brand",
+      "branding",
+      "identity",
+      "logo",
+      "creative",
+      "packaging",
+    ])
+  )
     return "branding";
   if (
     includesAny(text, [
@@ -385,7 +457,10 @@ function getEnglishReply(intent: Intent): ChatReply {
       return {
         text: `${CHAT_KNOWLEDGE.faq[2].answer} ${CHAT_KNOWLEDGE.caseStudies[0].name} is a hospitality project in the published work.`,
         actions: [
-          { label: "Hospitality services", href: "/services#hospitality-marketing" },
+          {
+            label: "Hospitality services",
+            href: "/services#hospitality-marketing",
+          },
           { label: "The Salt Line", href: "/the-salt-line" },
         ],
       };
@@ -393,21 +468,32 @@ function getEnglishReply(intent: Intent): ChatReply {
       return {
         text: `${CHAT_KNOWLEDGE.faq[3].answer} ${CHAT_KNOWLEDGE.caseStudies[0].name} is a hospitality project in the published work.`,
         actions: [
-          { label: "Restaurant services", href: "/services#restaurant-marketing" },
+          {
+            label: "Restaurant services",
+            href: "/services#restaurant-marketing",
+          },
           { label: "The Salt Line", href: "/the-salt-line" },
         ],
       };
     case "performance":
       return {
         text: "Performance Marketing & Paid Ads includes Google Ads, Meta Ads, paid advertising, and lead generation. Results depend on each business and aren’t guaranteed.",
-        actions: [{ label: "Performance marketing", href: "/services#performance-marketing" }],
+        actions: [
+          {
+            label: "Performance marketing",
+            href: "/services#performance-marketing",
+          },
+        ],
       };
     case "development":
       return {
         text: "The site lists Shopify store and e-commerce development, plus software and web app development. The services page has the details for each.",
         actions: [
           { label: "Shopify & e-commerce", href: "/services#shopify-store" },
-          { label: "Software & web apps", href: "/services#software-development" },
+          {
+            label: "Software & web apps",
+            href: "/services#software-development",
+          },
         ],
       };
     case "seo":
@@ -420,7 +506,10 @@ function getEnglishReply(intent: Intent): ChatReply {
         text: "The site lists social media campaign management, influencer partnerships, proprietary media activations, photography, and videography. See the service details on the website.",
         actions: [
           { label: "Digital marketing", href: "/services#digital-marketing" },
-          { label: "Influencer & owned media", href: "/services#influencer-marketing" },
+          {
+            label: "Influencer & owned media",
+            href: "/services#influencer-marketing",
+          },
         ],
       };
     case "branding":
@@ -438,7 +527,7 @@ function getEnglishReply(intent: Intent): ChatReply {
       };
     default:
       return {
-        text: "I don’t have that detail in the information available to me. The team can help via the contact page or at info@thevirtualvelocity.com.",
+        text: "I don’t have that detail in the information available to me. The team can help via the contact page or at adddemail@gmail.com.",
         actions: HANDOFF_ACTIONS,
       };
   }
@@ -516,7 +605,10 @@ function getRomanUrduReply(intent: Intent): ChatReply {
       return {
         text: `${CHAT_KNOWLEDGE.faq[2].answer} ${CHAT_KNOWLEDGE.caseStudies[0].name} website par published hospitality work hai.`,
         actions: [
-          { label: "Hospitality services", href: "/services#hospitality-marketing" },
+          {
+            label: "Hospitality services",
+            href: "/services#hospitality-marketing",
+          },
           { label: "The Salt Line", href: "/the-salt-line" },
         ],
       };
@@ -524,21 +616,32 @@ function getRomanUrduReply(intent: Intent): ChatReply {
       return {
         text: `${CHAT_KNOWLEDGE.faq[3].answer} ${CHAT_KNOWLEDGE.caseStudies[0].name} published hospitality work hai.`,
         actions: [
-          { label: "Restaurant services", href: "/services#restaurant-marketing" },
+          {
+            label: "Restaurant services",
+            href: "/services#restaurant-marketing",
+          },
           { label: "The Salt Line", href: "/the-salt-line" },
         ],
       };
     case "performance":
       return {
         text: "Performance Marketing mein Google Ads, Meta Ads, paid advertising aur lead generation shamil hain. Results ki guarantee nahi di jati.",
-        actions: [{ label: "Performance marketing", href: "/services#performance-marketing" }],
+        actions: [
+          {
+            label: "Performance marketing",
+            href: "/services#performance-marketing",
+          },
+        ],
       };
     case "development":
       return {
         text: "Website par Shopify/e-commerce aur software/web app development services listed hain.",
         actions: [
           { label: "Shopify & e-commerce", href: "/services#shopify-store" },
-          { label: "Software & web apps", href: "/services#software-development" },
+          {
+            label: "Software & web apps",
+            href: "/services#software-development",
+          },
         ],
       };
     case "seo":
@@ -551,7 +654,10 @@ function getRomanUrduReply(intent: Intent): ChatReply {
         text: "Website par social media campaigns, influencer partnerships, photography, videography aur owned media activations listed hain.",
         actions: [
           { label: "Digital marketing", href: "/services#digital-marketing" },
-          { label: "Influencer & owned media", href: "/services#influencer-marketing" },
+          {
+            label: "Influencer & owned media",
+            href: "/services#influencer-marketing",
+          },
         ],
       };
     case "branding":
@@ -569,7 +675,7 @@ function getRomanUrduReply(intent: Intent): ChatReply {
       };
     default:
       return {
-        text: "Mere paas is bare mein verified detail nahi. Aap contact page ya info@thevirtualvelocity.com ke zariye team se pooch sakte hain.",
+        text: "Mere paas is bare mein verified detail nahi. Aap contact page ya adddemail@gmail.com ke zariye team se pooch sakte hain.",
         actions: HANDOFF_ACTIONS,
       };
   }
@@ -647,7 +753,10 @@ function getUrduReply(intent: Intent): ChatReply {
       return {
         text: `${CHAT_KNOWLEDGE.faq[2].answer} ${CHAT_KNOWLEDGE.caseStudies[0].name} ویب سائٹ پر موجود ہاسپیٹیلٹی کام ہے۔`,
         actions: [
-          { label: "Hospitality services", href: "/services#hospitality-marketing" },
+          {
+            label: "Hospitality services",
+            href: "/services#hospitality-marketing",
+          },
           { label: "The Salt Line", href: "/the-salt-line" },
         ],
       };
@@ -655,21 +764,32 @@ function getUrduReply(intent: Intent): ChatReply {
       return {
         text: `${CHAT_KNOWLEDGE.faq[3].answer} ${CHAT_KNOWLEDGE.caseStudies[0].name} ویب سائٹ پر موجود ہاسپیٹیلٹی کام ہے۔`,
         actions: [
-          { label: "Restaurant services", href: "/services#restaurant-marketing" },
+          {
+            label: "Restaurant services",
+            href: "/services#restaurant-marketing",
+          },
           { label: "The Salt Line", href: "/the-salt-line" },
         ],
       };
     case "performance":
       return {
         text: "پرفارمنس مارکیٹنگ میں Google Ads، Meta Ads، پیڈ ایڈورٹائزنگ، اور لیڈ جنریشن شامل ہیں۔ نتائج کی ضمانت نہیں دی جاتی۔",
-        actions: [{ label: "Performance marketing", href: "/services#performance-marketing" }],
+        actions: [
+          {
+            label: "Performance marketing",
+            href: "/services#performance-marketing",
+          },
+        ],
       };
     case "development":
       return {
         text: "ویب سائٹ پر Shopify اور ای کامرس ڈیولپمنٹ کے ساتھ سافٹ ویئر اور ویب ایپ ڈیولپمنٹ درج ہیں۔",
         actions: [
           { label: "Shopify & e-commerce", href: "/services#shopify-store" },
-          { label: "Software & web apps", href: "/services#software-development" },
+          {
+            label: "Software & web apps",
+            href: "/services#software-development",
+          },
         ],
       };
     case "seo":
@@ -682,7 +802,10 @@ function getUrduReply(intent: Intent): ChatReply {
         text: "ویب سائٹ پر سوشل میڈیا مہمات، انفلوئنسر پارٹنرشپس، ملکیتی میڈیا، اور ویڈیو ریلز درج ہیں۔",
         actions: [
           { label: "Digital marketing", href: "/services#digital-marketing" },
-          { label: "Influencer & owned media", href: "/services#influencer-marketing" },
+          {
+            label: "Influencer & owned media",
+            href: "/services#influencer-marketing",
+          },
         ],
       };
     case "branding":
@@ -700,7 +823,7 @@ function getUrduReply(intent: Intent): ChatReply {
       };
     default:
       return {
-        text: "میرے پاس اس بارے میں مصدقہ تفصیل موجود نہیں۔ آپ رابطہ صفحے یا info@thevirtualvelocity.com کے ذریعے ٹیم سے پوچھ سکتے ہیں۔",
+        text: "میرے پاس اس بارے میں مصدقہ تفصیل موجود نہیں۔ آپ رابطہ صفحے یا adddemail@gmail.com کے ذریعے ٹیم سے پوچھ سکتے ہیں۔",
         actions: HANDOFF_ACTIONS,
       };
   }
