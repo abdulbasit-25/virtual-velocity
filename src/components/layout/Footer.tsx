@@ -14,7 +14,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Mail, Phone, MapPin, ChevronUp, ArrowUpRight } from "lucide-react";
+import { Phone, MapPin, ChevronUp, ArrowUpRight } from "lucide-react";
 import { AGENCY_INFO } from "@/data/agencyData";
 
 /* ============================== DATA ============================== */
@@ -59,8 +59,6 @@ const OFFICES = [
   },
   { city: "Birmingham, UK", phone: "+44 7756 557500", tel: "+447756557500" },
 ];
-
-const EMAILS = [{ label: "New Business (BDO)", email: "adddemail@gmail.com" }];
 
 /* ============================ SHARED UI ============================ */
 
@@ -546,40 +544,6 @@ export const Footer = () => {
             className="col-span-2 rounded-3xl border border-white/15 bg-black/10 p-4 backdrop-blur-sm sm:p-6 lg:col-span-12 lg:p-8"
           >
             <ColumnHeading>Get In Touch</ColumnHeading>
-
-            {/* Emails */}
-            <ul className="grid gap-3 md:grid-cols-2">
-              {EMAILS.map((item) => (
-                <li key={item.email} className="min-w-0">
-                  <Tooltip label="Send an email" block>
-                    <a
-                      href={`mailto:${item.email}`}
-                      className={`${cardBase} ${ring}`}
-                      aria-label={`Email ${item.label}: ${item.email}`}
-                    >
-                      <span className={iconBubble}>
-                        <Mail
-                          className="h-[18px] w-[18px]"
-                          aria-hidden="true"
-                        />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-[11px] font-semibold uppercase tracking-wider text-white/70">
-                          {item.label}
-                        </span>
-                        <span className="block text-[15px] font-semibold [overflow-wrap:anywhere] sm:text-base">
-                          {item.email}
-                        </span>
-                      </span>
-                      <ArrowUpRight
-                        className="hidden h-5 w-5 shrink-0 text-white/50 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white sm:block"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  </Tooltip>
-                </li>
-              ))}
-            </ul>
 
             {/* Offices */}
             <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
