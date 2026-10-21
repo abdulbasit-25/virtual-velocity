@@ -38,9 +38,9 @@ const SLIDER_IMAGES = [
 ];
 
 const HERO_BRANDS = [
-  { src: "/All logo in SVG Format/pizza hut.svg", name: "Pizza Hut" },
   { src: "/All logo in SVG Format/Anta logo.svg", name: "ANTA" },
-  { src: "/All logo in SVG Format/cresto.svg", name: "Cresto" },
+  { src: "/All logo in SVG Format/Gloria Jeans logo.svg", name: "Gloria Jeans" },
+  { src: "/All logo in SVG Format/chaaye khana.svg", name: "Chaaye Khana" },
   { src: "/All logo in SVG Format/Megazone logo.svg", name: "Megazone" },
 ];
 
