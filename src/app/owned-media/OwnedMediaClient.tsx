@@ -610,7 +610,7 @@ export function OwnedMediaClient() {
                 Owned Media Network
               </span>
 
-              <h1 className="select-none text-[clamp(2.25rem,7vw,5rem)] font-black uppercase leading-[0.92] tracking-tighter text-zinc-950">
+              <h1 className="select-none text-[clamp(2.25rem,6vw,3.5rem)] font-black uppercase leading-[0.98] tracking-tighter text-zinc-950">
                 <span className="text-emerald-600">{AGENCY_METRICS.ownedAudience.display}</span> Direct Reach.
                 <br />
                 Seven Channels. Zero Middlemen.
