@@ -231,7 +231,7 @@ export function AboutClient() {
                 Agency Manifesto &amp; Culture
               </span>
 
-              <h1 className="select-none text-[clamp(2.25rem,7vw,5.5rem)] font-black uppercase leading-[0.95] tracking-tight text-zinc-950">
+              <h1 className="select-none text-[clamp(2.25rem,6vw,3.75rem)] font-black uppercase leading-[0.95] tracking-tight text-zinc-950">
                 <SplitTextReveal
                   text="WE ARE VIRTUAL VELOCITY"
                   highlightWords={["VELOCITY"]}
