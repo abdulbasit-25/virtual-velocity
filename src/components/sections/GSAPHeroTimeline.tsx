@@ -279,16 +279,46 @@ export const GSAPHeroTimeline = () => {
               </div>
               <div className="flex items-center gap-3" aria-label="Selected client brands">
                 <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-white/75">Trusted by</span>
-                {HERO_BRANDS.map((brand) => (
-                  <Image
+                {HERO_BRANDS.map((brand, index) => (
+                  <motion.div
                     key={brand.name}
-                    src={brand.src}
-                    alt={brand.name}
-                    width={52}
-                    height={28}
-                    sizes="52px"
-                    className="h-5 w-auto max-w-12 object-contain brightness-0 invert opacity-90 sm:h-6"
-                  />
+                    animate={reduceMotion ? undefined : { y: [0, -5, 0] }}
+                    whileHover={{ scale: 1.15 }}
+                    transition={{
+                      y: reduceMotion
+                        ? { duration: 0 }
+                        : {
+                            duration: 2.8,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: index * 0.18,
+                          },
+                      scale: { duration: 0.2 },
+                    }}
+                    className="group relative inline-flex"
+                  >
+                    <span
+                      tabIndex={0}
+                      aria-describedby={`hero-brand-tooltip-${index}`}
+                      className="inline-flex"
+                    >
+                      <Image
+                        src={brand.src}
+                        alt={brand.name}
+                        width={88}
+                        height={48}
+                        sizes="88px"
+                        className="h-9 w-auto max-w-20 object-contain opacity-100 sm:h-11"
+                      />
+                      <span
+                        id={`hero-brand-tooltip-${index}`}
+                        role="tooltip"
+                        className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-zinc-950 px-2.5 py-1 text-[10px] font-semibold text-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
+                      >
+                        {brand.name}
+                      </span>
+                    </span>
+                  </motion.div>
                 ))}
               </div>
             </div>
