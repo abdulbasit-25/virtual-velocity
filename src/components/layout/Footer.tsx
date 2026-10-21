@@ -60,10 +60,7 @@ const OFFICES = [
   { city: "Birmingham, UK", phone: "+44 7756 557500", tel: "+447756557500" },
 ];
 
-const EMAILS = [
-  { label: "New Business (BDO)", email: "info@thevirtualvelocity.com" },
-  { label: "General Queries", email: "admin@thevirtualvelocity.com" },
-];
+const EMAILS = [{ label: "New Business (BDO)", email: "adddemail@gmail.com" }];
 
 /* ============================ SHARED UI ============================ */
 
@@ -501,7 +498,7 @@ export const Footer = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${s.label} (opens in a new tab)`}
-                      className={`flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white hover:bg-white hover:text-[#007573] hover:shadow-lg hover:shadow-black/20 active:translate-y-0 ${ring}`}
+                      className={`flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white hover:bg-white hover:text-[#007573] hover:shadow-lg hover:shadow-black/20 active:translate-y-0 sm:h-14 sm:w-14 ${ring}`}
                     >
                       <SocialIcon label={s.label} />
                     </a>
