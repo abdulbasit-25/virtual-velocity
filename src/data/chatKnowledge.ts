@@ -12,12 +12,14 @@ export const CHAT_KNOWLEDGE = {
     {
       title: "BRANDING & VISUAL IDENTITY",
       href: "/services#branding",
-      description: "Brand identity, logo design, visual guidelines, and brand positioning.",
+      description:
+        "Brand identity, logo design, visual guidelines, and brand positioning.",
     },
     {
       title: "DIGITAL MARKETING SERVICES",
       href: "/services#digital-marketing",
-      description: "Multi-channel digital marketing and social media campaign management.",
+      description:
+        "Multi-channel digital marketing and social media campaign management.",
     },
     {
       title: "BPO & OUTSOURCING SERVICES",
@@ -40,17 +42,20 @@ export const CHAT_KNOWLEDGE = {
     {
       title: "PERFORMANCE MARKETING & PAID ADS",
       href: "/services#performance-marketing",
-      description: "Google Ads, Meta Ads, paid advertising, and lead generation campaigns.",
+      description:
+        "Google Ads, Meta Ads, paid advertising, and lead generation campaigns.",
     },
     {
       title: "SEARCH ENGINE OPTIMIZATION (SEO)",
       href: "/services#seo",
-      description: "Technical SEO audits, keyword research, schema, and content strategy.",
+      description:
+        "Technical SEO audits, keyword research, schema, and content strategy.",
     },
     {
       title: "SHOPIFY STORE & E-COMMERCE DEVELOPMENT",
       href: "/services#shopify-store",
-      description: "Shopify store design, development, payment setup, and optimization.",
+      description:
+        "Shopify store design, development, payment setup, and optimization.",
     },
     {
       title: "INFLUENCER MARKETING & PROPRIETARY MEDIA",
@@ -61,7 +66,8 @@ export const CHAT_KNOWLEDGE = {
     {
       title: "SOFTWARE & WEB APP DEVELOPMENT",
       href: "/services#software-development",
-      description: "Custom web applications, Next.js development, and cloud software.",
+      description:
+        "Custom web applications, Next.js development, and cloud software.",
     },
   ] satisfies ChatService[],
   additionalCapabilities: [
@@ -75,7 +81,8 @@ export const CHAT_KNOWLEDGE = {
     {
       name: "The Salt Line",
       href: "/the-salt-line",
-      description: "Hospitality, organic social growth, and community-building work.",
+      description:
+        "Hospitality, organic social growth, and community-building work.",
     },
     {
       name: "Cresto Pizza",
@@ -97,16 +104,24 @@ export const CHAT_KNOWLEDGE = {
     kit: "/Virtual%20Velocity%20Profile%20(1).pdf",
   },
   contacts: {
-    newBusinessEmail: "info@thevirtualvelocity.com",
-    generalEmail: "admin@thevirtualvelocity.com",
+    newBusinessEmail: "adddemail@gmail.com",
+    generalEmail: "adddemail@gmail.com",
     phones: [
-      { label: "United States", number: "+1 (417) 897-5749", href: "tel:+14178975749" },
+      {
+        label: "United States",
+        number: "+1 (417) 897-5749",
+        href: "tel:+14178975749",
+      },
       {
         label: "Islamabad, Pakistan",
         number: "+92 332 529 6693",
         href: "tel:+923325296693",
       },
-      { label: "Birmingham, UK", number: "+44 7756 557500", href: "tel:+447756557500" },
+      {
+        label: "Birmingham, UK",
+        number: "+44 7756 557500",
+        href: "tel:+447756557500",
+      },
     ],
   },
   hubs: [
