@@ -191,7 +191,7 @@ export function ServicesClient() {
                   initial="hidden"
                   animate="show"
                   custom={1}
-                  className="font-black uppercase tracking-tight leading-[0.92] text-5xl sm:text-7xl md:text-8xl lg:text-[8rem] select-none"
+                  className="font-black uppercase tracking-tight leading-[0.95] text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] select-none"
                 >
                   Services
                   <span className="text-emerald-400">.</span>
