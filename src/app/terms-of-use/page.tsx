@@ -142,7 +142,7 @@ export default function TermsOfUsePage() {
                 Legal Framework
               </span>
 
-              <h1 className="mt-5 text-[clamp(2.5rem,8vw,5rem)] font-black uppercase leading-[0.95] tracking-tight text-zinc-950">
+              <h1 className="mt-5 text-[clamp(2.25rem,6vw,3.5rem)] font-black uppercase leading-[0.98] tracking-tight text-zinc-950">
                 Terms of <span className="text-[#00A29F]">Use</span>
               </h1>
 
@@ -279,12 +279,8 @@ export default function TermsOfUsePage() {
                     <div className="flex flex-col gap-2.5 pt-1 sm:flex-row sm:flex-wrap">
                       {[
                         {
-                          label: "General queries",
-                          email: "admin@thevirtualvelocity.com",
-                        },
-                        {
-                          label: "New business",
-                          email: "info@thevirtualvelocity.com",
+                          label: "Contact",
+                          email: "adddemail@gmail.com",
                         },
                       ].map((c) => (
                         <a
