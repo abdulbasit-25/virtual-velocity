@@ -136,7 +136,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <span className="text-zinc-500">• {post.readTime}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-outfit font-black text-zinc-900 uppercase tracking-tight leading-[1.05] break-words">
+            <h1 className="text-3xl sm:text-4xl lg:text-[3.5rem] font-outfit font-black text-zinc-900 uppercase tracking-tight leading-[1.05] break-words">
               {post.title}
             </h1>
 
