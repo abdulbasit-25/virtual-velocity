@@ -266,7 +266,7 @@ export function BlogClient() {
               <Zap className="h-4 w-4" aria-hidden="true" />
               Thought leadership &amp; articles
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl xl:text-[5.25rem] font-black uppercase leading-[0.9] tracking-tighter text-zinc-900">
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-black uppercase leading-[0.95] tracking-tighter text-zinc-900">
               The digital <span className="text-zinc-400">journal</span>
             </h1>
             <p className="max-w-2xl text-base sm:text-xl text-zinc-600 font-light leading-relaxed">
