@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { RefreshCw, Home, Mail, TriangleAlert } from "lucide-react";
+import { RefreshCw, Home, TriangleAlert } from "lucide-react";
 
 export default function ErrorPage({
   error,
@@ -29,14 +29,6 @@ export default function ErrorPage({
     // If the retry fails again this component re-renders with a new error
     window.setTimeout(() => setRetrying(false), 1200);
   };
-
-  const mailto = `mailto:adddemail@gmail.com?subject=${encodeURIComponent(
-    "Website error report",
-  )}&body=${encodeURIComponent(
-    `Hi team,\n\nI ran into an error on the website.\n\nPage: ${
-      typeof window !== "undefined" ? window.location.href : ""
-    }\n${error.digest ? `Reference: ${error.digest}\n` : ""}\nWhat I was doing:\n`,
-  )}`;
 
   return (
     <main
@@ -116,13 +108,7 @@ export default function ErrorPage({
           Back to home
         </Link>
 
-        <a
-          href={mailto}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-3 font-bold text-zinc-700 underline-offset-4 transition-colors hover:text-[#006766] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006766] focus-visible:ring-offset-2"
-        >
-          <Mail className="h-4 w-4" aria-hidden="true" />
-          Report this
-        </a>
+        {/* Email report action intentionally disabled. */}
       </div>
 
       {/* Reference code (helps support find the exact error in the logs) */}
